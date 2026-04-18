@@ -13,7 +13,7 @@ namespace Project.Models
         Maintenance
     }
 
-    internal class Car
+    public class Car
     {
         public int CarId { get; set; }
         public string Brand { get; set; }

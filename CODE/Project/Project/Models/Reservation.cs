@@ -14,7 +14,7 @@ namespace Project.Models
         Completed
     }
 
-    internal class Reservation
+    public class Reservation
     {
         public int ReservationId { get; set; }
         public DateTime StartDate { get; set; }
