@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="Project.Views.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,12 +5,159 @@
     xmlns:local="using:Project.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="Transparent">
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Grid Grid.Column="0" Background="#0F2540">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Brand -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10"
+                        Padding="20,32,20,24">
+                <Border Width="32" Height="32" CornerRadius="8" Background="#1A6EF5">
+                    <TextBlock Text="D" Foreground="White" FontWeight="SemiBold"
+                               FontSize="16" HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Border>
+                <TextBlock Text="DriveEase" Foreground="White" FontSize="15"
+                           FontWeight="Medium" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Nav Items -->
+            <StackPanel Grid.Row="1" Spacing="2" Padding="10,0">
+
+                <TextBlock Text="MAIN" Foreground="#66FFFFFF"
+                           FontSize="10" FontWeight="SemiBold"
+                           Margin="10,0,0,6" CharacterSpacing="80"/>
+
+                <Button x:Name="BtnOverview" Style="{StaticResource NavButtonStyle}"
+                        Tag="Overview" Click="NavButton_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE80F;" FontSize="14" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="Overview" Foreground="#CCFFFFFF" FontSize="13"/>
+                    </StackPanel>
+                </Button>
+
+                <Button x:Name="BtnReservations" Style="{StaticResource NavButtonStyle}"
+                        Tag="Reservations" Click="NavButton_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE787;" FontSize="14" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="Reservations" Foreground="#CCFFFFFF" FontSize="13"/>
+                    </StackPanel>
+                </Button>
+
+                <Button x:Name="BtnCars" Style="{StaticResource NavButtonStyle}"
+                        Tag="Cars" Click="NavButton_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE804;" FontSize="14" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="Cars" Foreground="#CCFFFFFF" FontSize="13"/>
+                    </StackPanel>
+                </Button>
+
+                <TextBlock Text="ACCOUNT" Foreground="#66FFFFFF"
+                           FontSize="10" FontWeight="SemiBold"
+                           Margin="10,16,0,6" CharacterSpacing="80"/>
+
+                <Button x:Name="BtnProfile" Style="{StaticResource NavButtonStyle}"
+                        Tag="Profile" Click="NavButton_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE77B;" FontSize="14" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="Profile" Foreground="#CCFFFFFF" FontSize="13"/>
+                    </StackPanel>
+                </Button>
+
+                <Button x:Name="BtnSettings" Style="{StaticResource NavButtonStyle}"
+                        Tag="Settings" Click="NavButton_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE713;" FontSize="14" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="Settings" Foreground="#CCFFFFFF" FontSize="13"/>
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+
+            <!-- User Footer -->
+            <Border Grid.Row="2" BorderBrush="#22FFFFFF" BorderThickness="0,1,0,0"
+                    Padding="16,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Width="32" Height="32"
+                            CornerRadius="16" Background="#1A6EF5">
+                        <TextBlock x:Name="AvatarInitials" Text="IP"
+                                   Foreground="White" FontSize="11"
+                                   FontWeight="Medium"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="10,0,0,0"
+                                VerticalAlignment="Center">
+                        <TextBlock x:Name="SidebarUserName" Text="Ion Popescu"
+                                   Foreground="White" FontSize="12"
+                                   FontWeight="Medium"/>
+                        <TextBlock x:Name="SidebarUserRole" Text="Customer"
+                                   Foreground="#66FFFFFF" FontSize="11"/>
+                    </StackPanel>
+
+                    <Button Grid.Column="2" Style="{StaticResource NavButtonStyle}"
+                            ToolTipService.ToolTip="Sign out"
+                            Click="SignOut_Click" Padding="6">
+                        <FontIcon Glyph="&#xF3B1;" FontSize="14" Foreground="#99FFFFFF"/>
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Content Area -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Top bar -->
+            <Border Grid.Row="0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                    BorderThickness="0,0,0,1" Padding="24,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock x:Name="PageTitle" Text="Overview"
+                                   FontSize="17" FontWeight="Medium"
+                                   Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <TextBlock x:Name="PageSubtitle" Text=""
+                                   FontSize="12"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+
+                    <Button Grid.Column="1" x:Name="BtnPrimaryAction"
+                            Content="+ New reservation"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Click="PrimaryAction_Click"/>
+                </Grid>
+            </Border>
+
+            <!-- Page Frame -->
+            <Frame Grid.Row="1" x:Name="ContentFrame" Padding="24"/>
+        </Grid>
     </Grid>
 </Page>

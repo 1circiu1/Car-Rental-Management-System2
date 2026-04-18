@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Project.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,9 +24,26 @@ namespace Project
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        public static MainWindow Current { get; private set; }
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            Current = this;
+
+            this.ExtendsContentIntoTitleBar = true;
+            MainFrame.Navigate(typeof(SignInPage));
+        }
+        public void Navigate(Type pageType, object parameter = null)
+        {
+            MainFrame.Navigate(pageType, parameter);
+        }
+
+        public void GoBack()
+        {
+            if (MainFrame.CanGoBack)
+            {
+                MainFrame.GoBack();
+            }
         }
     }
 }
