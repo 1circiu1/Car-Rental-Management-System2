@@ -1,0 +1,3 @@
+Customer -> da in chirie, sau inchiriaza
+Admin -> pentru admin, nu buton separat ci daca e-mail/username si parola sunt corecte, se va loga ca admin si se va loga pe o alta pagina.
+Car renter -> Schimba admin in ala care da in chirie

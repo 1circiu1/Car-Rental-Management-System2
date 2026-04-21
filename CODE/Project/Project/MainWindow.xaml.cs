@@ -31,7 +31,7 @@ namespace Project
             Current = this;
 
             this.ExtendsContentIntoTitleBar = true;
-            MainFrame.Navigate(typeof(SignInPage));
+            MainFrame.Navigate(typeof(Project.Views.SignUpPage));
         }
         public void Navigate(Type pageType, object parameter = null)
         {
