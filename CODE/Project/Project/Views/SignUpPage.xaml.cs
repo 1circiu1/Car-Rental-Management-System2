@@ -1,6 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Project.Models;
+using CarRental.Backend.Models;
 
 namespace Project.Views
 {

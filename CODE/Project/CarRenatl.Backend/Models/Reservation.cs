@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Models
+namespace CarRental.Backend.Models
 {
     public enum ReservationStatus
     {
@@ -19,6 +20,8 @@ namespace Project.Models
         public int ReservationId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
         public decimal TotalCost { get; set; }
         public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
 

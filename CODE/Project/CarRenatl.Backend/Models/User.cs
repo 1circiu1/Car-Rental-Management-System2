@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Models
+namespace CarRental.Backend.Models
 {
     public class User
     {
@@ -15,8 +15,6 @@ namespace Project.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-
-        // kakakakakakakakakak
 
     }
 }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Project.Models
+namespace CarRental.Backend.Models
 {
     public enum CarStatus
     {
@@ -20,13 +21,14 @@ namespace Project.Models
         public string Model { get; set; }
         public int Year { get; set; }
         public string PlateNumber { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
         public decimal PricePerDay { get; set; }
 
         public CarStatus Status { get; set; } = CarStatus.Available;
 
         public List<Reservation> Reservations { get; set; } = new List<Reservation>();
 
-     
         public bool IsAvailable() => Status == CarStatus.Available;
     }
 }
