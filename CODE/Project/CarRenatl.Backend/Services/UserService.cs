@@ -13,12 +13,13 @@ namespace CarRental.Backend.Services
             _context = new AppDbContext();
         }
 
-        public User Login(string email, string password)
+        public User Login(string email, string password, string role)
         {
-            var users = _context.Users.ToList();
-
             return _context.Users
-                .FirstOrDefault(u => u.Email == email && u.Password == password);
+                .FirstOrDefault(u =>
+                    u.Email == email &&
+                    u.Password == password &&
+                    u.Role == role);
         }
 
 

@@ -117,7 +117,7 @@ namespace Project.Views
 
        private void PrimaryAction_Click(object sender, RoutedEventArgs e)
         {
-            ContentFrame.Navigate(typeof(DashboardPage));
+            ContentFrame.Navigate(typeof(NewReservationPage));
         }
 
         private void SignOut_Click(object sender, RoutedEventArgs e)

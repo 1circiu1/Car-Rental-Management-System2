@@ -21,17 +21,11 @@ namespace Project.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AdminDashboardPage : Page
+    public sealed partial class NewReservationPage : Page
     {
-        public AdminDashboardPage()
+        public NewReservationPage()
         {
             InitializeComponent();
-        }
-
-        private void SignOut_Click(object sender, RoutedEventArgs e)
-        {
-            SessionManager.CurrentUser = null;
-            MainWindow.Current.Navigate(typeof(SignInPage));
         }
     }
 }

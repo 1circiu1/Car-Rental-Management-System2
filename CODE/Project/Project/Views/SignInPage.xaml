@@ -6,13 +6,17 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Border Width="380" Padding="32"
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1" CornerRadius="12">
+        <Border 
+            Width="620"
+            Padding="48"
+            CornerRadius="24"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1">
             <StackPanel Spacing="0">
 
-                <!-- Logo -->
                 <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,24">
                     <Border Width="32" Height="32" CornerRadius="8" Background="#1A6EF5">
                         <TextBlock Text="D" Foreground="White" FontWeight="SemiBold"
@@ -24,7 +28,6 @@
                                Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                 </StackPanel>
 
-                <!-- Title -->
                 <TextBlock Text="Welcome back" FontSize="20" FontWeight="Medium"
                            Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                            Margin="0,0,0,4"/>
@@ -32,66 +35,78 @@
                            FontSize="13" Margin="0,0,0,20"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
-                <!-- Role Toggle: Customer / Car Renter / Admin -->
-                <!-- Role Toggle: Customer / Car Renter -->
                 <Border Background="{ThemeResource ControlFillColorDefaultBrush}"
-        CornerRadius="8" Padding="3" Margin="0,0,0,20">
+                        CornerRadius="8" Padding="3" Margin="0,0,0,20">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="BtnCustomerRole" Grid.Column="0"
-                Content="Customer"
-                HorizontalAlignment="Stretch"
-                Click="RoleToggle_Click" Tag="Customer"
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="6" BorderThickness="0.5"
-                FontSize="12"/>
-                        <Button x:Name="BtnRenterRole" Grid.Column="1"
-                Content="Car Renter"
-                HorizontalAlignment="Stretch"
-                Click="RoleToggle_Click" Tag="CarRenter"
-                Background="Transparent"
-                CornerRadius="6" BorderThickness="0"
-                FontSize="12"/>
+
+                        <Button x:Name="BtnCustomerRole"
+                            Grid.Column="0"
+                            Content="Customer"
+                            HorizontalAlignment="Stretch"
+                            Click="RoleToggle_Click"
+                            Tag="Customer"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            CornerRadius="6"
+                            BorderThickness="0.5"
+                            FontSize="12"/>
+
+                        <Button x:Name="BtnRenterRole"
+                            Grid.Column="1"
+                            Content="Car Renter"
+                            HorizontalAlignment="Stretch"
+                            Click="RoleToggle_Click"
+                            Tag="CarRenter"
+                            Background="Transparent"
+                            CornerRadius="6"
+                            BorderThickness="0"
+                            FontSize="12"/>
+
+                        <Button x:Name="BtnAdminRole"
+                            Grid.Column="2"
+                            Content="Admin"
+                            HorizontalAlignment="Stretch"
+                            Click="RoleToggle_Click"
+                            Tag="Admin"
+                            Background="Transparent"
+                            CornerRadius="6"
+                            BorderThickness="0"
+                            FontSize="12"/>
                     </Grid>
                 </Border>
 
-                <!-- Email -->
                 <TextBlock Text="EMAIL" FontSize="11" FontWeight="Medium"
                            CharacterSpacing="40" Margin="0,0,0,6"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 <TextBox x:Name="TxtEmail" PlaceholderText="you@email.com"
                          Margin="0,0,0,16"/>
 
-                <!-- Password -->
                 <TextBlock Text="PASSWORD" FontSize="11" FontWeight="Medium"
                            CharacterSpacing="40" Margin="0,0,0,6"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 <PasswordBox x:Name="TxtPassword" PlaceholderText="••••••••"
                              Margin="0,0,0,8"/>
 
-                <!-- Forgot password — hidden for admin -->
                 <HyperlinkButton x:Name="BtnForgotPassword"
                                  Content="Forgot password?"
                                  FontSize="12" Padding="0"
                                  Margin="0,0,0,20"
                                  HorizontalAlignment="Right"/>
 
-                <!-- Error -->
                 <TextBlock x:Name="TxtError" Text=""
                            Foreground="#E24B4A" FontSize="12"
                            Margin="0,0,0,12" Visibility="Collapsed"
                            TextWrapping="Wrap"/>
 
-                <!-- Sign in button -->
                 <Button x:Name="BtnSignIn" Content="Sign in"
                         HorizontalAlignment="Stretch"
                         Style="{StaticResource AccentButtonStyle}"
                         Click="SignIn_Click"/>
 
-                <!-- Sign up link — hidden for admin -->
                 <StackPanel x:Name="SignUpLink"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"

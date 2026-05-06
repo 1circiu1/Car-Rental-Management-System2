@@ -22,6 +22,8 @@ namespace Project.Views
 
             ResetRoleButton(BtnCustomerRole);
             ResetRoleButton(BtnRenterRole);
+            ResetRoleButton(BtnAdminRole);
+
             ActivateRoleButton(btn);
         }
 
@@ -53,7 +55,7 @@ namespace Project.Views
 
             UserService userService = new UserService();
 
-            User user = userService.Login(email, password);
+            User user = userService.Login(email, password, _selectedRole);
 
             if (user == null)
             {

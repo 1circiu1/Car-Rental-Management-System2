@@ -17,6 +17,7 @@
     <None Remove="NavButtonStyles.xaml" />
     <None Remove="Views\AdminDashboardPage.xaml" />
     <None Remove="Views\Dashboard\Settings.xaml" />
+    <None Remove="Views\NewReservationPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -75,6 +76,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CarRenatl.Backend\CarRental.Backend.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\NewReservationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!--

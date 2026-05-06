@@ -133,7 +133,7 @@
 
             <!-- Top bar -->
             <Border Grid.Row="0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
-                    BorderThickness="0,0,0,1" Padding="24,16">
+                    BorderThickness="0,0,0,1" Padding="24,48,24,16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -152,7 +152,8 @@
                     <Button Grid.Column="1" x:Name="BtnPrimaryAction"
                             Content="+ New reservation"
                             Style="{StaticResource AccentButtonStyle}"
-                            Click="PrimaryAction_Click"/>
+                            Click="PrimaryAction_Click"
+                            Margin="0,24,0,0"/>
                 </Grid>
             </Border>
 
