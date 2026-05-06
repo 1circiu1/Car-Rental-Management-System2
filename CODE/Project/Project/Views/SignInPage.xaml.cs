@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 
 namespace Project.Views
 {
@@ -50,51 +51,27 @@ namespace Project.Views
                 return;
             }
 
-            // TODO: replace with real DB lookup
-            // Admin credentials — works from either tab
-            if (email == "admin@driveease.com" && password == "admin123")
+            UserService userService = new UserService();
+
+            User user = userService.Login(email, password);
+
+            if (user == null)
             {
-                SessionManager.CurrentUser = new User
-                {
-                    FirstName = "Admin",
-                    LastName = "",
-                    Username = email,
-                    Role = "Admin"
-                };
+                TxtError.Text = "Invalid email or password.";
+                TxtError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            SessionManager.CurrentUser = user;
+
+            if (user.Role == "Admin")
+            {
                 MainWindow.Current.Navigate(typeof(AdminDashboardPage));
-                return;
             }
-
-            // Customer credentials
-            if (_selectedRole == "Customer" && email == "ion@driveease.com" && password == "pass123")
+            else
             {
-                SessionManager.CurrentUser = new User
-                {
-                    FirstName = "Ion",
-                    LastName = "Popescu",
-                    Username = email,
-                    Role = "Customer"
-                };
                 MainWindow.Current.Navigate(typeof(DashboardPage));
-                return;
             }
-
-            // Car Renter credentials
-            if (_selectedRole == "CarRenter" && email == "renter@driveease.com" && password == "rent123")
-            {
-                SessionManager.CurrentUser = new User
-                {
-                    FirstName = "Mihai",
-                    LastName = "Urs",
-                    Username = email,
-                    Role = "CarRenter"
-                };
-                MainWindow.Current.Navigate(typeof(DashboardPage));
-                return;
-            }
-
-            TxtError.Text = "Invalid email or password.";
-            TxtError.Visibility = Visibility.Visible;
         }
 
         private void GoToSignUp_Click(object sender, RoutedEventArgs e)

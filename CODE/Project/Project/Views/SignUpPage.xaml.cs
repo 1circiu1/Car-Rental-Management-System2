@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 
 namespace Project.Views
 {
@@ -36,14 +37,21 @@ namespace Project.Views
                 return;
             }
 
-            // TODO: save to DB later
-            SessionManager.CurrentUser = new User
+            UserService userService = new UserService();
+
+            User newUser = new User
             {
                 FirstName = firstName,
                 LastName = lastName,
+                Email = email,
                 Username = email,
+                Password = password,
                 Role = "Customer"
             };
+
+            userService.Register(newUser);
+
+            SessionManager.CurrentUser = newUser;
 
             MainWindow.Current.Navigate(typeof(DashboardPage));
         }

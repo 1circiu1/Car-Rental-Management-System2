@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRental.Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260502172122_InitialCreate")]
+    [Migration("20260506082336_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
