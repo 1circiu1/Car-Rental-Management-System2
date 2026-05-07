@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Project.Views.Dashboard;
 using System;
 
+
 namespace Project.Views
 {
     public sealed partial class DashboardPage : Page
@@ -63,6 +64,12 @@ namespace Project.Views
                     break;
                 case "Settings":
                     SetActivePage(btn, typeof(SettingsPage), "Settings", null);
+                    break;
+                case "Favorites":
+                    SetActivePage(btn, typeof(FavoritesPage), "Favorites", null);
+                    break;
+                case "Support":
+                    SetActivePage(btn, typeof(SupportPage), "Help & Support", null);
                     break;
             }
         }

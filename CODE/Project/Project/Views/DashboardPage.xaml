@@ -64,6 +64,22 @@
                         <TextBlock Text="Cars" Foreground="#CCFFFFFF" FontSize="13"/>
                     </StackPanel>
                 </Button>
+                
+                <Button x:Name="BtnFavorites" Style="{StaticResource NavButtonStyle}"
+        Tag="Favorites" Click="NavButton_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xEB51;" FontSize="14" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="Favorites" Foreground="#CCFFFFFF" FontSize="13"/>
+                    </StackPanel>
+                </Button>
+                
+                <Button x:Name="BtnSupport" Style="{StaticResource NavButtonStyle}"
+        Tag="Support" Click="NavButton_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE8BD;" FontSize="14" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="Support" Foreground="#CCFFFFFF" FontSize="13"/>
+                    </StackPanel>
+                </Button>
 
                 <TextBlock Text="ACCOUNT" Foreground="#66FFFFFF"
                            FontSize="10" FontWeight="SemiBold"

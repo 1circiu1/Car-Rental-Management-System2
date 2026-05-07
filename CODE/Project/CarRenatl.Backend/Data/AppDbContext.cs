@@ -18,6 +18,9 @@ namespace CarRental.Backend.Data
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<FavoriteCars> FavoriteCars { get; set; }
+
+        public DbSet<SupportTicket> SupportTickets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
