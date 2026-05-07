@@ -21,6 +21,7 @@ namespace CarRental.Backend.Models
         public string Model { get; set; }
         public int Year { get; set; }
         public string PlateNumber { get; set; }
+        public string ImagePath { get; set; } = "";
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal PricePerDay { get; set; }

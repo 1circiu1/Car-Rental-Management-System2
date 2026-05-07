@@ -14,9 +14,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\Cars\audi_A4_2019.png" />
+    <None Remove="Assets\Cars\bmw_320d_2020.png" />
+    <None Remove="Assets\Cars\dacia_logan_2022.jpg" />
+    <None Remove="Assets\Cars\mercedes_c_class_2021.png" />
+    <None Remove="Assets\Cars\volkswagen_golf7_2018.png" />
     <None Remove="NavButtonStyles.xaml" />
     <None Remove="Views\AdminDashboardPage.xaml" />
-    <None Remove="Views\Dashboard\FavoritesPage.xaml" />
+    <None Remove="Views\Dashboard\CarsDetailsPage.xaml" />
+    <None Remove="Views\Dashboard\CarsPage.xaml" />
     <None Remove="Views\Dashboard\Settings.xaml" />
     <None Remove="Views\Dashboard\SupportPage.xaml" />
     <None Remove="Views\NewReservationPage.xaml" />
@@ -78,16 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CarRenatl.Backend\CarRental.Backend.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Dashboard\SupportPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Dashboard\FavoritesPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\NewReservationPage.xaml">
