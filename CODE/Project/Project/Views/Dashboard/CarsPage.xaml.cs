@@ -1,3 +1,5 @@
+using CarRental.Backend.Data;
+using CarRental.Backend.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,6 +28,23 @@ namespace Project.Views.Dashboard
         public CarsPage()
         {
             InitializeComponent();
+            LoadCars();
+        }
+
+        private void LoadCars()
+        {
+            using var db = new AppDbContext();
+            CarsGrid.ItemsSource = db.Cars.ToList();
+        }
+
+        private void CarsGrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var selectedCar = e.ClickedItem as Car;
+
+            if (selectedCar != null)
+            {
+                Frame.Navigate(typeof(CarDetailsPage), selectedCar.CarId);
+            }
         }
     }
 }
