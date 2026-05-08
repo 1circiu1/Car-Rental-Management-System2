@@ -2,17 +2,17 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Project.Views.Dashboard;
 using System;
+using Project.Views.Auth;
 
 
-namespace Project.Views
+namespace Project.Views.Dashboard.Customer
 {
-    public sealed partial class DashboardPage : Page
+    public sealed partial class CustomerDashboardPage : Page
     {
         private Button _activeNavButton;
 
-        public DashboardPage()
+        public CustomerDashboardPage()
         {
             this.InitializeComponent();
             this.Loaded += DashboardPage_Loaded;

@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Linq;
 
-namespace Project.Views.Dashboard
+namespace Project.Views.Dashboard.Customer
 {
     public sealed partial class CarDetailsPage : Page
     {

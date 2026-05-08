@@ -15,6 +15,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI.Windowing;
 using Windows.Graphics;
+using Project.Views.Auth;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,7 +44,7 @@ namespace Project
             var presenter = appWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
             presenter?.Maximize();
 
-            MainFrame.Navigate(typeof(Project.Views.SignUpPage));
+            MainFrame.Navigate(typeof(SignUpPage));
         }
         public void Navigate(Type pageType, object parameter = null)
         {

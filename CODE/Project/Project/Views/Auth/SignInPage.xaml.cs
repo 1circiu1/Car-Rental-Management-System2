@@ -3,8 +3,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using CarRental.Backend.Models;
 using CarRental.Backend.Services;
+using Project.Views.Dashboard.Customer;
+using Project.Views.Dashboard.Admin;
 
-namespace Project.Views
+namespace Project.Views.Auth
 {
     public sealed partial class SignInPage : Page
     {
@@ -72,7 +74,7 @@ namespace Project.Views
             }
             else
             {
-                MainWindow.Current.Navigate(typeof(DashboardPage));
+                MainWindow.Current.Navigate(typeof(CustomerDashboardPage));
             }
         }
 

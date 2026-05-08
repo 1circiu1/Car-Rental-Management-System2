@@ -2,8 +2,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using CarRental.Backend.Models;
 using CarRental.Backend.Services;
+using Project.Views.Dashboard.Customer;
 
-namespace Project.Views
+namespace Project.Views.Auth
 {
     public sealed partial class SignUpPage : Page
     {
@@ -53,7 +54,7 @@ namespace Project.Views
 
             SessionManager.CurrentUser = newUser;
 
-            MainWindow.Current.Navigate(typeof(DashboardPage));
+            MainWindow.Current.Navigate(typeof(CustomerDashboardPage));
         }
 
         private void GoToSignIn_Click(object sender, RoutedEventArgs e)
