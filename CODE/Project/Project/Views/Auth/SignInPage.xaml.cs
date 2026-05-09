@@ -1,10 +1,11 @@
+using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using CarRental.Backend.Models;
-using CarRental.Backend.Services;
-using Project.Views.Dashboard.Customer;
 using Project.Views.Dashboard.Admin;
+using Project.Views.Dashboard.CarRenter;
+using Project.Views.Dashboard.Customer;
 
 namespace Project.Views.Auth
 {
@@ -71,6 +72,11 @@ namespace Project.Views.Auth
             if (user.Role == "Admin")
             {
                 MainWindow.Current.Navigate(typeof(AdminDashboardPage));
+            }
+           
+            else if (user.Role == "CarRenter")
+            {
+                MainWindow.Current.Navigate(typeof(CarRenterDashboardPage));
             }
             else
             {

@@ -21,6 +21,12 @@
     <None Remove="Assets\Cars\volkswagen_golf7_2018.png" />
     <None Remove="NavButtonStyles.xaml" />
     <None Remove="Views\AdminDashboardPage.xaml" />
+    <None Remove="Views\Dashboard\CarRenter\CarRenterDashboardPage.xaml" />
+    <None Remove="Views\Dashboard\CarRenter\EarningsPage.xaml" />
+    <None Remove="Views\Dashboard\CarRenter\MyCarsPage.xaml" />
+    <None Remove="Views\Dashboard\CarRenter\RentalRequestPage.xaml" />
+    <None Remove="Views\Dashboard\CarRenter\RenterOverviewPage.xaml" />
+    <None Remove="Views\Dashboard\CarRenter\VehicleMonitoringPage.xaml" />
     <None Remove="Views\Dashboard\CarsDetailsPage.xaml" />
     <None Remove="Views\Dashboard\CarsPage.xaml" />
     <None Remove="Views\Dashboard\Settings.xaml" />
@@ -82,11 +88,40 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Views\Dashboard\Admin\" />
-    <Folder Include="Views\Dashboard\CarRenter\" />
     <Folder Include="Views\Auth\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CarRenatl.Backend\CarRental.Backend.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\CarRenter\VehicleMonitoringPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\CarRenter\EarningsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\CarRenter\RentalRequestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\CarRenter\MyCarsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\CarRenter\RenterOverviewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\CarRenter\CarRenterDashboardPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\NewReservationPage.xaml">

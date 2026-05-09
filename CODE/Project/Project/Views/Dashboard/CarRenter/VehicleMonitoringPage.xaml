@@ -1,0 +1,139 @@
+<Page
+    x:Class="Project.Views.Dashboard.CarRenter.VehicleMonitoringPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="20">
+
+            <StackPanel>
+                <TextBlock Text="Vehicle Monitoring"
+                           FontSize="24"
+                           FontWeight="SemiBold"/>
+
+                <TextBlock Text="Track live status, maintenance needs and renter feedback."
+                           FontSize="14"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            </StackPanel>
+
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Padding="20" CornerRadius="12"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel>
+                        <TextBlock Text="Needs Inspection" FontSize="14"/>
+                        <TextBlock Text="0" FontSize="28" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Padding="20" CornerRadius="12"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel>
+                        <TextBlock Text="In Maintenance" FontSize="14"/>
+                        <TextBlock Text="0" FontSize="28" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Padding="20" CornerRadius="12"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel>
+                        <TextBlock Text="Reports This Month" FontSize="14"/>
+                        <TextBlock Text="0" FontSize="28" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Border Padding="20" CornerRadius="12"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+
+                <StackPanel Spacing="16">
+
+                    <TextBlock Text="Live Vehicle Status"
+                               FontSize="18"
+                               FontWeight="SemiBold"/>
+
+                    <Border Padding="40"
+                            CornerRadius="10"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1">
+
+                        <StackPanel HorizontalAlignment="Center" Spacing="12">
+
+                            <FontIcon Glyph="&#xE9D9;"
+                                      FontSize="40"
+                                      HorizontalAlignment="Center"/>
+
+                            <TextBlock Text="No vehicle reports yet"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Center"/>
+
+                            <TextBlock Text="After a rental ends, inspection notes and renter feedback will appear here."
+                                       HorizontalAlignment="Center"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </Border>
+
+            <Border Padding="20" CornerRadius="12"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Monitoring Categories"
+                               FontSize="18"
+                               FontWeight="SemiBold"/>
+
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Padding="16" CornerRadius="10"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Live Status" FontWeight="SemiBold"/>
+                                <TextBlock Text="Available, rented, late return or inactive."
+                                           TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="1" Padding="16" CornerRadius="10"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Maintenance" FontWeight="SemiBold"/>
+                                <TextBlock Text="Track damage, repairs and required checks."
+                                           TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2" Padding="16" CornerRadius="10"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Renter Feedback" FontWeight="SemiBold"/>
+                                <TextBlock Text="See how the renter returned the vehicle."
+                                           TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
