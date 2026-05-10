@@ -140,5 +140,25 @@ namespace Project.Views.Dashboard.CarRenter
             SessionManager.CurrentUser = null;
             MainWindow.Current.Navigate(typeof(SignInPage));
         }
+
+        public void NavigateToMyFleet()
+        {
+            SetActivePage(BtnMyFleet, typeof(MyCarsPage), "My Fleet", "+ List a car");
+        }
+
+        public void NavigateToBookingRequests()
+        {
+            SetActivePage(BtnBookingRequests, typeof(RentalRequestsPage), "Booking Requests", null);
+        }
+
+        public void NavigateToRevenue()
+        {
+            SetActivePage(BtnRevenue, typeof(EarningsPage), "Revenue", null);
+        }
+
+        public void NavigateToVehicleMonitoring()
+        {
+            SetActivePage(BtnVehicleStatus, typeof(VehicleMonitoringPage), "Vehicle Monitoring", null);
+        }
     }
 }
