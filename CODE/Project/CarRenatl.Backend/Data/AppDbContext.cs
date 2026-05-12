@@ -27,5 +27,14 @@ namespace CarRental.Backend.Data
             optionsBuilder.UseSqlServer(
                 @"Server=localhost\SQLEXPRESS;Database=CarRentalDB;Trusted_Connection=True;TrustServerCertificate=True;");
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Car>()
+                .HasOne(c => c.Owner)
+                .WithMany(u => u.Cars)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
     }
 }

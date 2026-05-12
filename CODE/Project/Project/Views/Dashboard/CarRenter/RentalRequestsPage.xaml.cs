@@ -27,5 +27,60 @@ namespace Project.Views.Dashboard.CarRenter
         {
             InitializeComponent();
         }
+        private async void Details_Click(object sender, RoutedEventArgs e)
+        {
+            var content = new StackPanel
+            {
+                Spacing = 12
+            };
+
+            content.Children.Add(new TextBlock
+            {
+                Text = "Customer Information",
+                FontSize = 18,
+                FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
+            });
+
+            content.Children.Add(new TextBlock
+            {
+                Text = "Name: Andrei M."
+            });
+
+            content.Children.Add(new TextBlock
+            {
+                Text = "Requested Vehicle: Tesla Model 3"
+            });
+
+            content.Children.Add(new TextBlock
+            {
+                Text = "Rental Period: May 14 - May 17"
+            });
+
+            content.Children.Add(new TextBlock
+            {
+                Text = "Estimated Total: $270"
+            });
+
+            content.Children.Add(new TextBlock
+            {
+                Text = "Pickup Location: Cluj-Napoca"
+            });
+
+            content.Children.Add(new TextBlock
+            {
+                Text = "Additional Notes: Customer requested airport pickup."
+            });
+
+            var dialog = new ContentDialog
+            {
+                Title = "Rental Request Details",
+                Content = content,
+                CloseButtonText = "Close",
+                XamlRoot = this.XamlRoot
+            };
+
+            await dialog.ShowAsync();
+        }
     }
 }
+

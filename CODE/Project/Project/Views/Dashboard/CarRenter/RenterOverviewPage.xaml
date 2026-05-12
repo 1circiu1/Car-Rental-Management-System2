@@ -6,7 +6,6 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Spacing="20">
 
-            <!-- Header -->
             <StackPanel>
                 <TextBlock Text="Owner Overview"
                            FontSize="24"
@@ -30,7 +29,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
                         <TextBlock Text="Listed Cars" FontSize="14"/>
-                        <TextBlock Text="3" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="ListedCarsText" Text="0" FontSize="28" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
 
@@ -38,23 +37,23 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
                         <TextBlock Text="Available" FontSize="14"/>
-                        <TextBlock Text="2" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="AvailableCarsText" Text="0" FontSize="28" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
 
                 <Border Grid.Column="2" Padding="20" CornerRadius="12"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
-                        <TextBlock Text="Pending Requests" FontSize="14"/>
-                        <TextBlock Text="4" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock Text="In Maintenance" FontSize="14"/>
+                        <TextBlock x:Name="MaintenanceCarsText" Text="0" FontSize="28" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
 
                 <Border Grid.Column="3" Padding="20" CornerRadius="12"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
-                        <TextBlock Text="This Month" FontSize="14"/>
-                        <TextBlock Text="$245" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock Text="Potential / Month" FontSize="14"/>
+                        <TextBlock x:Name="PotentialMonthText" Text="$0" FontSize="28" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -73,123 +72,12 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
 
                     <StackPanel Spacing="16">
-                        <TextBlock Text="Recent Activity"
+                        <TextBlock Text="Fleet Summary"
                                    FontSize="18"
                                    FontWeight="SemiBold"/>
 
-                        <Border Padding="14"
-                                CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
-                            <Grid ColumnSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Border Grid.Column="0"
-                                        Width="36"
-                                        Height="36"
-                                        CornerRadius="18"
-                                        Background="#2234C759">
-                                    <FontIcon Glyph="&#xE73E;"
-                                              FontSize="16"
-                                              Foreground="#FF34C759"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                                </Border>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="BMW 3 Series returned successfully"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Text="Vehicle marked as clean and ready for next rental."
-                                               FontSize="13"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                </StackPanel>
-
-                                <TextBlock Grid.Column="2"
-                                           Text="Today"
-                                           FontSize="12"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            </Grid>
-                        </Border>
-
-                        <Border Padding="14"
-                                CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
-                            <Grid ColumnSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Border Grid.Column="0"
-                                        Width="36"
-                                        Height="36"
-                                        CornerRadius="18"
-                                        Background="#221A6EF5">
-                                    <FontIcon Glyph="&#xE787;"
-                                              FontSize="16"
-                                              Foreground="#FF6EA8FE"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                                </Border>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="New rental request received"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Text="Tesla Model 3 requested for 3 days."
-                                               FontSize="13"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                </StackPanel>
-
-                                <TextBlock Grid.Column="2"
-                                           Text="2h ago"
-                                           FontSize="12"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            </Grid>
-                        </Border>
-
-                        <Border Padding="14"
-                                CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
-                            <Grid ColumnSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Border Grid.Column="0"
-                                        Width="36"
-                                        Height="36"
-                                        CornerRadius="18"
-                                        Background="#22FF9500">
-                                    <FontIcon Glyph="&#xE8C7;"
-                                              FontSize="16"
-                                              Foreground="#FFFF9500"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                                </Border>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Payment completed"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Text="$90 added from a completed rental."
-                                               FontSize="13"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                </StackPanel>
-
-                                <TextBlock Grid.Column="2"
-                                           Text="Yesterday"
-                                           FontSize="12"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            </Grid>
-                        </Border>
+                        <StackPanel x:Name="FleetSummaryPanel"
+                                    Spacing="12"/>
                     </StackPanel>
                 </Border>
 
@@ -205,21 +93,21 @@
                                    FontWeight="SemiBold"/>
 
                         <Button HorizontalAlignment="Stretch"
-                            Content="+ List a new car"
-                            Style="{StaticResource AccentButtonStyle}"
-                            Click="GoToMyFleet_Click"/>
+                                Content="+ List a new car"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Click="GoToMyFleet_Click"/>
 
                         <Button HorizontalAlignment="Stretch"
-                            Content="View booking requests"
-                            Click="GoToBookingRequests_Click"/>
+                                Content="View booking requests"
+                                Click="GoToBookingRequests_Click"/>
 
                         <Button HorizontalAlignment="Stretch"
-                            Content="Check vehicle monitoring"
-                            Click="GoToVehicleMonitoring_Click"/>
+                                Content="Check vehicle monitoring"
+                                Click="GoToVehicleMonitoring_Click"/>
 
                         <Button HorizontalAlignment="Stretch"
-                            Content="Open earnings report"
-                            Click="GoToRevenue_Click"/>
+                                Content="Open earnings report"
+                                Click="GoToRevenue_Click"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -240,14 +128,16 @@
                                    FontSize="18"
                                    FontWeight="SemiBold"/>
 
-                        <TextBlock Text="2 vehicles are ready for rent. 1 vehicle is currently rented."
+                        <TextBlock x:Name="FleetHealthText"
+                                   Text="No fleet data available yet."
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                    TextWrapping="Wrap"/>
 
                         <Border Padding="12"
                                 CornerRadius="10"
                                 Background="#2234C759">
-                            <TextBlock Text="All listed vehicles are in good condition."
+                            <TextBlock x:Name="FleetHealthBadgeText"
+                                       Text="Fleet status will appear here."
                                        Foreground="#FF34C759"/>
                         </Border>
                     </StackPanel>
@@ -262,13 +152,15 @@
                                    FontSize="18"
                                    FontWeight="SemiBold"/>
 
-                        <TextBlock Text="Review pending booking requests and update vehicle availability if needed."
+                        <TextBlock x:Name="NextStepText"
+                                   Text="Start by listing your first car."
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                    TextWrapping="Wrap"/>
 
-                        <Button Content="Review requests"
+                        <Button x:Name="NextStepButton"
+                                Content="Go to My Fleet"
                                 HorizontalAlignment="Left"
-                                Click="GoToBookingRequests_Click"/>
+                                Click="GoToMyFleet_Click"/>
                     </StackPanel>
                 </Border>
             </Grid>
