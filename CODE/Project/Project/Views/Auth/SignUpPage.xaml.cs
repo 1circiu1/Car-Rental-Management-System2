@@ -2,7 +2,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using CarRental.Backend.Models;
 using CarRental.Backend.Services;
+using CarRental.Backend.Data;
 using Project.Views.Dashboard.Customer;
+using Project.Views.Dashboard.CarRenter;
 
 namespace Project.Views.Auth
 {
@@ -10,7 +12,7 @@ namespace Project.Views.Auth
     {
         public SignUpPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void SignUp_Click(object sender, RoutedEventArgs e)
@@ -23,8 +25,10 @@ namespace Project.Views.Auth
             var phone = TxtPhone.Text.Trim();
             var password = TxtPassword.Password;
 
-            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) ||
-                string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(firstName) ||
+                string.IsNullOrEmpty(lastName) ||
+                string.IsNullOrEmpty(email) ||
+                string.IsNullOrEmpty(password))
             {
                 TxtError.Text = "Please fill in all required fields.";
                 TxtError.Visibility = Visibility.Visible;
@@ -38,6 +42,15 @@ namespace Project.Views.Auth
                 return;
             }
 
+            if (RoleComboBox.SelectedItem is not ComboBoxItem selectedRoleItem)
+            {
+                TxtError.Text = "Please choose a role.";
+                TxtError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            string selectedRole = selectedRoleItem.Content.ToString();
+
             UserService userService = new UserService();
 
             User newUser = new User
@@ -47,14 +60,51 @@ namespace Project.Views.Auth
                 Email = email,
                 Username = email,
                 Password = password,
-                Role = "Customer"
+                Role = selectedRole
             };
 
             userService.Register(newUser);
 
+            using (var db = new AppDbContext())
+            {
+                if (selectedRole == "Customer")
+                {
+                    Customer customer = new Customer
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Email = email,
+                        Phone = phone
+                    };
+
+                    db.Customers.Add(customer);
+                }
+                else if (selectedRole == "CarRenter")
+                {
+                    CarRenter carRenter = new CarRenter
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Email = email,
+                        Phone = phone
+                    };
+
+                    db.CarRenters.Add(carRenter);
+                }
+
+                db.SaveChanges();
+            }
+
             SessionManager.CurrentUser = newUser;
 
-            MainWindow.Current.Navigate(typeof(CustomerDashboardPage));
+            if (selectedRole == "Customer")
+            {
+                MainWindow.Current.Navigate(typeof(CustomerDashboardPage));
+            }
+            else if (selectedRole == "CarRenter")
+            {
+                MainWindow.Current.Navigate(typeof(CarRenterDashboardPage));
+            }
         }
 
         private void GoToSignIn_Click(object sender, RoutedEventArgs e)

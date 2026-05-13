@@ -12,10 +12,11 @@ namespace Project.Views.Dashboard.Customer
     public sealed partial class CarDetailsPage : Page
     {
         private Car _car;
+        private bool _isFavorite;
 
         public CarDetailsPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -23,6 +24,7 @@ namespace Project.Views.Dashboard.Customer
             int carId = (int)e.Parameter;
 
             using var db = new AppDbContext();
+
             _car = db.Cars.FirstOrDefault(c => c.CarId == carId);
 
             if (_car == null)
@@ -36,16 +38,75 @@ namespace Project.Views.Dashboard.Customer
             CarPlate.Text = $"Plate number: {_car.PlateNumber}";
             CarStatus.Text = $"Status: {(_car.Status == 0 ? "Available" : "Unavailable")}";
             CarPrice.Text = $"€ {_car.PricePerDay} / day";
+
+            LoadFavoriteStatus();
+        }
+
+        private void LoadFavoriteStatus()
+        {
+            if (SessionManager.CurrentUser == null || _car == null)
+                return;
+
+            using var db = new AppDbContext();
+
+            int userId = SessionManager.CurrentUser.UserId;
+
+            _isFavorite = db.FavoriteCars.Any(f =>
+                f.UserId == userId &&
+                f.CarId == _car.CarId);
+
+            UpdateFavoriteButton();
+        }
+
+        private void Favorite_Click(object sender, RoutedEventArgs e)
+        {
+            if (SessionManager.CurrentUser == null || _car == null)
+                return;
+
+            using var db = new AppDbContext();
+
+            int userId = SessionManager.CurrentUser.UserId;
+
+            var existingFavorite = db.FavoriteCars.FirstOrDefault(f =>
+                f.UserId == userId &&
+                f.CarId == _car.CarId);
+
+            if (existingFavorite == null)
+            {
+                db.FavoriteCars.Add(new FavoriteCars
+                {
+                    UserId = userId,
+                    CarId = _car.CarId
+                });
+
+                _isFavorite = true;
+            }
+            else
+            {
+                db.FavoriteCars.Remove(existingFavorite);
+                _isFavorite = false;
+            }
+
+            db.SaveChanges();
+            UpdateFavoriteButton();
+        }
+
+        private void UpdateFavoriteButton()
+        {
+            BtnFavorite.Content = _isFavorite ? "♥ Favorite" : "♡ Favorite";
+        }
+
+        private void Reserve_Click(object sender, RoutedEventArgs e)
+        {
+            if (_car == null)
+                return;
+
+            Frame.Navigate(typeof(NewReservationPage), _car.CarId);
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             Frame.GoBack();
-        }
-
-        private void Favorite_Click(object sender, RoutedEventArgs e)
-        {
-            BtnFavorite.Content = "♥ Favorited";
         }
     }
 }

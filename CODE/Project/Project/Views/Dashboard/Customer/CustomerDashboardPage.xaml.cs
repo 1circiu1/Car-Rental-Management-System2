@@ -21,7 +21,7 @@ namespace Project.Views.Dashboard.Customer
         private void DashboardPage_Loaded(object sender, RoutedEventArgs e)
         {
             LoadUserInfo();
-            SetActivePage(BtnOverview, typeof(OverviewPage), "Overview", "+ New reservation");
+            SetActivePage(BtnOverview, typeof(OverviewPage), "Overview");
         }
 
         private void LoadUserInfo()
@@ -51,30 +51,30 @@ namespace Project.Views.Dashboard.Customer
             switch (btn.Tag?.ToString())
             {
                 case "Overview":
-                    SetActivePage(btn, typeof(OverviewPage), "Overview", "+ New reservation");
+                    SetActivePage(btn, typeof(OverviewPage), "Overview");
                     break;
                 case "Reservations":
-                    SetActivePage(btn, typeof(ReservationsPage), "My reservations", "+ New reservation");
+                    SetActivePage(btn, typeof(ReservationsPage), "My reservations");
                     break;
                 case "Cars":
-                    SetActivePage(btn, typeof(CarsPage), "Available cars", null);
+                    SetActivePage(btn, typeof(CarsPage), "Available cars");
                     break;
                 case "Profile":
-                    SetActivePage(btn, typeof(ProfilePage), "My profile", null);
+                    SetActivePage(btn, typeof(ProfilePage), "My profile");
                     break;
                 case "Settings":
-                    SetActivePage(btn, typeof(SettingsPage), "Settings", null);
+                    SetActivePage(btn, typeof(SettingsPage), "Settings");
                     break;
                 case "Favorites":
-                    SetActivePage(btn, typeof(FavoritesPage), "Favorites", null);
+                    SetActivePage(btn, typeof(FavoritesPage), "Favorites");
                     break;
                 case "Support":
-                    SetActivePage(btn, typeof(SupportPage), "Help & Support", null);
+                    SetActivePage(btn, typeof(SupportPage), "Help & Support");
                     break;
             }
         }
 
-        private void SetActivePage(Button btn, Type pageType, string title, string actionLabel)
+        private void SetActivePage(Button btn, Type pageType, string title)
         {
             if (_activeNavButton != null)
                 SetNavButtonInactive(_activeNavButton);
@@ -84,16 +84,6 @@ namespace Project.Views.Dashboard.Customer
 
             PageTitle.Text = title;
             PageSubtitle.Text = DateTime.Now.ToString("dddd, dd MMMM yyyy");
-
-            if (actionLabel != null)
-            {
-                BtnPrimaryAction.Content = actionLabel;
-                BtnPrimaryAction.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                BtnPrimaryAction.Visibility = Visibility.Collapsed;
-            }
 
             ContentFrame.Navigate(pageType);
         }

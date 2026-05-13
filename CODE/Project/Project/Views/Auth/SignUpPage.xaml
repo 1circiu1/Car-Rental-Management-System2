@@ -71,6 +71,21 @@
                 <TextBox x:Name="TxtPhone" PlaceholderText="+40 7xx xxx xxx"
                          Margin="0,0,0,16"/>
 
+                <TextBlock Text="ROLE"
+                       FontSize="11"
+                       FontWeight="Medium"
+                       CharacterSpacing="40"
+                       Margin="0,0,0,6"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                <ComboBox x:Name="RoleComboBox"
+                      SelectedIndex="0"
+                      Margin="0,0,0,16">
+
+                    <ComboBoxItem Content="Customer"/>
+                    <ComboBoxItem Content="CarRenter"/>
+                </ComboBox>
+
                 <!-- Password -->
                 <TextBlock Text="PASSWORD" FontSize="11" FontWeight="Medium"
                            CharacterSpacing="40" Margin="0,0,0,6"

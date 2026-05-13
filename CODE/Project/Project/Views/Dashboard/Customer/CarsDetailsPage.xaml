@@ -73,7 +73,8 @@
                             Width="180"
                             Height="48"
                             Background="#A78BFA"
-                            Foreground="Black"/>
+                            Foreground="Black"
+                            Click="Reserve_Click"/>
 
                     <Button x:Name="BtnFavorite"
                             Content="♡ Favorite"

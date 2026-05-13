@@ -28,9 +28,9 @@
     <None Remove="Views\Dashboard\CarRenter\VehicleMonitoringPage.xaml" />
     <None Remove="Views\Dashboard\CarsDetailsPage.xaml" />
     <None Remove="Views\Dashboard\CarsPage.xaml" />
+    <None Remove="Views\Dashboard\Customer\NewReservationPage.xaml" />
     <None Remove="Views\Dashboard\Settings.xaml" />
     <None Remove="Views\Dashboard\SupportPage.xaml" />
-    <None Remove="Views\NewReservationPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -93,6 +93,11 @@
     <ProjectReference Include="..\CarRenatl.Backend\CarRental.Backend.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\Dashboard\Customer\NewReservationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\Dashboard\CarRenter\VehicleMonitoringPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -119,11 +124,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Dashboard\CarRenter\CarRenterDashboardPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\NewReservationPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

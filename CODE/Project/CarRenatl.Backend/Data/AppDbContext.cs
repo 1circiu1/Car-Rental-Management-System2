@@ -15,6 +15,7 @@ namespace CarRental.Backend.Data
         }
         public DbSet<Car> Cars { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<CarRenter> CarRenters { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<User> Users { get; set; }
