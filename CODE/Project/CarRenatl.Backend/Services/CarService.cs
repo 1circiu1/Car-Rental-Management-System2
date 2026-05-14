@@ -30,6 +30,16 @@ namespace CarRental.Backend.Services
             _context.SaveChanges();
         }
 
+        public Car GetCarById(int carId)
+        {
+            return _context.Cars.FirstOrDefault(c => c.CarId == carId);
+        }
+
+        public List<Car> GetAllCars()
+        {
+            return _context.Cars.ToList();
+        }
+
         public void UpdateCar(Car car)
         {
             _context.Cars.Update(car);

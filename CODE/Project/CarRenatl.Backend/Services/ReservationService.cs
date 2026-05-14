@@ -1,10 +1,9 @@
 ﻿using CarRental.Backend.Data;
 using CarRental.Backend.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarRental.Backend.Services
 {
@@ -17,48 +16,133 @@ namespace CarRental.Backend.Services
             _context = context;
         }
 
-        public void CreateReservation(Reservation reservation)
+        public bool CreateReservation(
+            int carId,
+            string customerEmail,
+            DateTime startDate,
+            DateTime endDate,
+            string pickupLocation)
         {
-            Car car = _context.Cars.FirstOrDefault(c => c.CarId == reservation.CarId);
+            var car = _context.Cars.FirstOrDefault(c => c.CarId == carId);
 
             if (car == null)
-                return;
+                return false;
 
-            reservation.Car = car;
+            var customer = GetCustomerByEmail(customerEmail);
 
-            if (!reservation.ValidatePeriod())
-                return;
+            if (customer == null)
+                return false;
 
-            if (!CheckAvailability(reservation.CarId, reservation.StartDate, reservation.EndDate))
-                return;
+            if (!CheckAvailability(carId, startDate, endDate))
+                return false;
 
-            reservation.TotalCost = reservation.CalculateTotal();
-            reservation.Status = ReservationStatus.Confirmed;
+            decimal totalCost = CalculateCost(carId, startDate, endDate);
 
-            car.Status = CarStatus.Rented;
+            var reservation = new Reservation
+            {
+                CarId = carId,
+                CustomerId = customer.CustomerId,
+                StartDate = startDate,
+                EndDate = endDate,
+                PickupLocation = pickupLocation,
+                TotalCost = totalCost,
+                Status = ReservationStatus.Pending
+            };
 
             _context.Reservations.Add(reservation);
             _context.SaveChanges();
+
+            return true;
+        }
+
+        public List<Reservation> GetCustomerReservations(string customerEmail)
+        {
+            var customer = _context.Customers.FirstOrDefault(c => c.Email == customerEmail);
+
+            if (customer == null)
+                return new List<Reservation>();
+
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Where(r => r.CustomerId == customer.CustomerId)
+                .OrderByDescending(r => r.StartDate)
+                .ToList();
+        }
+
+        public Reservation GetUpcomingReservation(string customerEmail)
+        {
+            var customer = _context.Customers.FirstOrDefault(c => c.Email == customerEmail);
+
+            if (customer == null)
+                return null;
+
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Where(r =>
+                    r.CustomerId == customer.CustomerId &&
+                    r.Status != ReservationStatus.Cancelled &&
+                    r.EndDate >= DateTime.Now)
+                .OrderBy(r => r.StartDate)
+                .FirstOrDefault();
+        }
+
+        public List<string> GetUnavailablePeriods(int carId)
+        {
+            return _context.Reservations
+                .Where(r =>
+                    r.CarId == carId &&
+                    r.Status != ReservationStatus.Cancelled &&
+                    r.EndDate >= DateTime.Now)
+                .OrderBy(r => r.StartDate)
+                .Select(r =>
+                    $"{r.StartDate:dd MMM yyyy, HH:mm} → {r.EndDate:dd MMM yyyy, HH:mm}")
+                .ToList();
+        }
+
+        public int GetActiveReservationsCount(string customerEmail)
+        {
+            var customer = _context.Customers.FirstOrDefault(c => c.Email == customerEmail);
+
+            if (customer == null)
+                return 0;
+
+            return _context.Reservations.Count(r =>
+                r.CustomerId == customer.CustomerId &&
+                r.Status != ReservationStatus.Cancelled &&
+                r.EndDate >= DateTime.Now);
+        }
+
+        public Reservation GetLatestReservation(string customerEmail)
+        {
+            var customer = _context.Customers.FirstOrDefault(c => c.Email == customerEmail);
+
+            if (customer == null)
+                return null;
+
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Where(r => r.CustomerId == customer.CustomerId)
+                .OrderByDescending(r => r.ReservationId)
+                .FirstOrDefault();
+        }
+
+        public Customer GetCustomerByEmail(string email)
+        {
+            return _context.Customers
+                .FirstOrDefault(c => c.Email == email);
         }
 
         public void CancelReservation(int reservationId)
         {
-            Reservation reservation = _context.Reservations
+            var reservation = _context.Reservations
                 .FirstOrDefault(r => r.ReservationId == reservationId);
 
-            if (reservation != null)
-            {
-                reservation.Status = ReservationStatus.Cancelled;
+            if (reservation == null)
+                return;
 
-                Car car = _context.Cars.FirstOrDefault(c => c.CarId == reservation.CarId);
+            reservation.Status = ReservationStatus.Cancelled;
 
-                if (car != null)
-                {
-                    car.Status = CarStatus.Available;
-                }
-
-                _context.SaveChanges();
-            }
+            _context.SaveChanges();
         }
 
         public bool CheckAvailability(int carId, DateTime startDate, DateTime endDate)
@@ -72,6 +156,19 @@ namespace CarRental.Backend.Services
             return !exists;
         }
 
+        public bool ValidatePeriod(DateTime startDate, DateTime endDate)
+        {
+            return startDate >= DateTime.Now && endDate > startDate;
+        }
+
+        public bool ValidateWorkingHours(DateTime startDate, DateTime endDate)
+        {
+            return startDate.Hour >= 8 &&
+                   startDate.Hour <= 20 &&
+                   endDate.Hour >= 8 &&
+                   endDate.Hour <= 20;
+        }
+
         public decimal CalculateCost(int carId, DateTime startDate, DateTime endDate)
         {
             Car car = _context.Cars.FirstOrDefault(c => c.CarId == carId);
@@ -79,12 +176,17 @@ namespace CarRental.Backend.Services
             if (car == null)
                 return 0;
 
-            int days = (endDate.Date - startDate.Date).Days;
+            TimeSpan duration = endDate - startDate;
+            double totalHours = duration.TotalHours;
 
-            if (days <= 0)
-                return 0;
+            if (totalHours < 24)
+            {
+                decimal hourlyRate = car.PricePerDay / 10;
+                return Math.Ceiling((decimal)totalHours) * hourlyRate;
+            }
 
-            return days * car.PricePerDay;
+            decimal totalDays = Math.Ceiling((decimal)duration.TotalDays);
+            return totalDays * car.PricePerDay;
         }
     }
 }

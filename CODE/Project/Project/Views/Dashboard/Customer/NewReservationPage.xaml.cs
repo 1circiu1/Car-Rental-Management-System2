@@ -1,5 +1,6 @@
 using CarRental.Backend.Data;
 using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -33,8 +34,9 @@ namespace Project.Views.Dashboard.Customer
             int carId = (int)e.Parameter;
 
             using var db = new AppDbContext();
+            var carService = new CarService(db);
 
-            _car = db.Cars.FirstOrDefault(c => c.CarId == carId);
+            _car = carService.GetCarById(carId);
 
             if (_car == null)
                 return;
@@ -54,22 +56,16 @@ namespace Project.Views.Dashboard.Customer
 
             using var db = new AppDbContext();
 
-            List<string> unavailablePeriods = db.Reservations
-                .Where(r =>
-                    r.CarId == _car.CarId &&
-                    r.Status != ReservationStatus.Cancelled &&
-                    r.EndDate >= DateTime.Now)
-                .OrderBy(r => r.StartDate)
-                .Select(r =>
-                    $"{r.StartDate:dd MMM yyyy, HH:mm} → {r.EndDate:dd MMM yyyy, HH:mm}")
-                .ToList();
+            var reservationService = new ReservationService(db);
 
-            if (unavailablePeriods.Count == 0)
+            var periods = reservationService.GetUnavailablePeriods(_car.CarId);
+
+            if (periods.Count == 0)
             {
-                unavailablePeriods.Add("No unavailable periods.");
+                periods.Add("No unavailable periods.");
             }
 
-            UnavailablePeriodsList.ItemsSource = unavailablePeriods;
+            UnavailablePeriodsList.ItemsSource = periods;
         }
 
         private void ReservationDateTime_Changed(object sender, object e)
@@ -131,24 +127,26 @@ namespace Project.Views.Dashboard.Customer
                 return;
             }
 
+            using var db = new AppDbContext();
+
+            var reservationService = new ReservationService(db);
+
+            decimal totalCost = reservationService.CalculateCost(
+                _car.CarId,
+                start.Value,
+                end.Value);
+
             TimeSpan duration = end.Value - start.Value;
-            double totalHours = duration.TotalHours;
 
-            decimal totalCost;
-
-            if (totalHours < 24)
+            if (duration.TotalHours < 24)
             {
-                decimal hourlyRate = _car.PricePerDay / 10;
-                totalCost = Math.Ceiling((decimal)totalHours) * hourlyRate;
-
-                DurationText.Text = $"Duration: {Math.Ceiling(totalHours)} hours";
+                DurationText.Text =
+                    $"Duration: {Math.Ceiling(duration.TotalHours)} hours";
             }
             else
             {
-                decimal totalDays = Math.Ceiling((decimal)duration.TotalDays);
-                totalCost = totalDays * _car.PricePerDay;
-
-                DurationText.Text = $"Duration: {totalDays} days";
+                DurationText.Text =
+                    $"Duration: {Math.Ceiling(duration.TotalDays)} days";
             }
 
             TotalPriceText.Text = $"€ {totalCost:0.00}";
@@ -192,56 +190,20 @@ namespace Project.Views.Dashboard.Customer
 
             using var db = new AppDbContext();
 
-            bool isBusy = db.Reservations.Any(r =>
-                r.CarId == _car.CarId &&
-                r.Status != ReservationStatus.Cancelled &&
-                start.Value < r.EndDate &&
-                end.Value > r.StartDate);
+            var reservationService = new ReservationService(db);
 
-            if (isBusy)
+            bool success = reservationService.CreateReservation(
+                _car.CarId,
+                SessionManager.CurrentUser.Email,
+                start.Value,
+                end.Value,
+                pickupLocation);
+
+            if (!success)
             {
-                ErrorText.Text = "This car is already reserved during the selected period. Please choose another time.";
+                ErrorText.Text = "This car is already reserved during the selected period.";
                 return;
             }
-
-            var customer = db.Customers.FirstOrDefault(c =>
-                c.Email == SessionManager.CurrentUser.Email);
-
-            if (customer == null)
-            {
-                ErrorText.Text = "Customer profile was not found.";
-                return;
-            }
-
-            TimeSpan duration = end.Value - start.Value;
-            double totalHours = duration.TotalHours;
-
-            decimal totalCost;
-
-            if (totalHours < 24)
-            {
-                decimal hourlyRate = _car.PricePerDay / 10;
-                totalCost = Math.Ceiling((decimal)totalHours) * hourlyRate;
-            }
-            else
-            {
-                decimal totalDays = Math.Ceiling((decimal)duration.TotalDays);
-                totalCost = totalDays * _car.PricePerDay;
-            }
-
-            var reservation = new Reservation
-            {
-                CarId = _car.CarId,
-                CustomerId = customer.CustomerId,
-                StartDate = start.Value,
-                EndDate = end.Value,
-                PickupLocation = pickupLocation,
-                TotalCost = totalCost,
-                Status = ReservationStatus.Pending
-            };
-
-            db.Reservations.Add(reservation);
-            db.SaveChanges();
 
             Frame.Navigate(typeof(Project.Views.Dashboard.ReservationsPage));
         }

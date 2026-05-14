@@ -1,5 +1,6 @@
 using CarRental.Backend.Data;
 using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -102,19 +103,13 @@ namespace Project.Views.Dashboard
             }
 
             using var db = new AppDbContext();
+            var supportService = new SupportTicketService(db);
 
-            var ticket = new SupportTicket
-            {
-                UserId = SessionManager.CurrentUser.UserId,
-                Subject = subject,
-                Category = _selectedCategory,
-                Message = message,
-                Status = "Open",
-                CreatedAt = DateTime.Now
-            };
-
-            db.SupportTickets.Add(ticket);
-            db.SaveChanges();
+            supportService.CreateTicket(
+                SessionManager.CurrentUser.UserId,
+                subject,
+                _selectedCategory,
+                message);
 
             SubjectTextBox.Text = "";
             MessageTextBox.Text = "";
@@ -141,12 +136,11 @@ namespace Project.Views.Dashboard
             }
 
             using var db = new AppDbContext();
+            var supportService = new SupportTicketService(db);
 
-            int activeTickets = db.SupportTickets.Count(t =>
-                t.UserId == SessionManager.CurrentUser.UserId &&
-                t.Status == "Open");
-
-            ActiveTicketsText.Text = activeTickets.ToString();
+            ActiveTicketsText.Text = supportService
+                .GetOpenTicketCount(SessionManager.CurrentUser.UserId)
+                .ToString();
         }
 
         private void LoadRecentTickets()
@@ -158,14 +152,10 @@ namespace Project.Views.Dashboard
             }
 
             using var db = new AppDbContext();
+            var supportService = new SupportTicketService(db);
 
-            var tickets = db.SupportTickets
-                .Where(t => t.UserId == SessionManager.CurrentUser.UserId)
-                .OrderByDescending(t => t.CreatedAt)
-                .Take(5)
-                .ToList();
-
-            RecentTicketsList.ItemsSource = tickets;
+            RecentTicketsList.ItemsSource =
+                supportService.GetRecentUserTickets(SessionManager.CurrentUser.UserId, 5);
         }
     }
 }

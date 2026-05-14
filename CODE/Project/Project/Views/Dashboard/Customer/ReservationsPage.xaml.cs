@@ -1,10 +1,7 @@
 using CarRental.Backend.Data;
-using CarRental.Backend.Models;
-using Microsoft.EntityFrameworkCore;
+using CarRental.Backend.Services;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Project.Views.Dashboard
 {
@@ -26,20 +23,10 @@ namespace Project.Views.Dashboard
                 return;
 
             using var db = new AppDbContext();
+            var reservationService = new ReservationService(db);
 
-            var customer = db.Customers.FirstOrDefault(c =>
-                c.Email == SessionManager.CurrentUser.Email);
-
-            if (customer == null)
-                return;
-
-            List<Reservation> reservations = db.Reservations
-                .Include(r => r.Car)
-                .Where(r => r.CustomerId == customer.CustomerId)
-                .OrderByDescending(r => r.StartDate)
-                .ToList();
-
-            ReservationsList.ItemsSource = reservations;
+            ReservationsList.ItemsSource =
+                reservationService.GetCustomerReservations(SessionManager.CurrentUser.Email);
         }
     }
 }

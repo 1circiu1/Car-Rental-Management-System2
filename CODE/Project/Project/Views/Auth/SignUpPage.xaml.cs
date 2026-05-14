@@ -2,7 +2,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using CarRental.Backend.Models;
 using CarRental.Backend.Services;
-using CarRental.Backend.Data;
 using Project.Views.Dashboard.Customer;
 using Project.Views.Dashboard.CarRenter;
 
@@ -63,37 +62,9 @@ namespace Project.Views.Auth
                 Role = selectedRole
             };
 
-            userService.Register(newUser);
+            userService.Register(newUser, phone);
 
-            using (var db = new AppDbContext())
-            {
-                if (selectedRole == "Customer")
-                {
-                    Customer customer = new Customer
-                    {
-                        FirstName = firstName,
-                        LastName = lastName,
-                        Email = email,
-                        Phone = phone
-                    };
 
-                    db.Customers.Add(customer);
-                }
-                else if (selectedRole == "CarRenter")
-                {
-                    CarRenter carRenter = new CarRenter
-                    {
-                        FirstName = firstName,
-                        LastName = lastName,
-                        Email = email,
-                        Phone = phone
-                    };
-
-                    db.CarRenters.Add(carRenter);
-                }
-
-                db.SaveChanges();
-            }
 
             SessionManager.CurrentUser = newUser;
 

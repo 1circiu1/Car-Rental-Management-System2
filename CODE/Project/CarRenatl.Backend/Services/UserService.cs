@@ -23,10 +23,39 @@ namespace CarRental.Backend.Services
         }
 
 
-        public void Register(User user)
+        public User Register(User user, string phone)
         {
             _context.Users.Add(user);
             _context.SaveChanges();
+
+            if (user.Role == "Customer")
+            {
+                Customer customer = new Customer
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Phone = phone
+                };
+
+                _context.Customers.Add(customer);
+            }
+            else if (user.Role == "CarRenter")
+            {
+                CarRenter carRenter = new CarRenter
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Phone = phone
+                };
+
+                _context.CarRenters.Add(carRenter);
+            }
+
+            _context.SaveChanges();
+
+            return user;
         }
     }
 }

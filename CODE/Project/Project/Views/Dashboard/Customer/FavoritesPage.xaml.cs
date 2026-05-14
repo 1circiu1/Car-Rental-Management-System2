@@ -1,10 +1,8 @@
 using CarRental.Backend.Data;
 using CarRental.Backend.Models;
-using Microsoft.EntityFrameworkCore;
+using CarRental.Backend.Services;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Project.Views.Dashboard
 {
@@ -26,24 +24,17 @@ namespace Project.Views.Dashboard
                 return;
 
             using var db = new AppDbContext();
+            var favoriteService = new FavoriteService(db);
 
-            int userId = SessionManager.CurrentUser.UserId;
-
-            List<Car> favoriteCars = db.FavoriteCars
-                .Include(f => f.Car)
-                .Where(f => f.UserId == userId)
-                .Select(f => f.Car)
-                .Where(c => c != null)
-                .ToList();
-
-            FavoritesGridView.ItemsSource = favoriteCars;
+            FavoritesGridView.ItemsSource =
+                favoriteService.GetFavoriteCars(SessionManager.CurrentUser.UserId);
         }
 
         private void FavoritesGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (e.ClickedItem is Car car)
             {
-                Frame.Navigate(typeof(Customer.CarDetailsPage), car.CarId);
+                Frame.Navigate(typeof(Project.Views.Dashboard.Customer.CarDetailsPage), car.CarId);
             }
         }
     }

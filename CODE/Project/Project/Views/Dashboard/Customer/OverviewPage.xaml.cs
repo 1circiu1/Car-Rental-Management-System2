@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using CarRental.Backend.Data;
 using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Project.Views.Dashboard
@@ -51,61 +52,33 @@ namespace Project.Views.Dashboard
             }
         }
 
-        private CarRental.Backend.Models.Customer GetCurrentCustomer(AppDbContext db, User user)
-        {
-            return db.Customers.FirstOrDefault(c => c.Email == user.Email);
-        }
-
         private void LoadDashboardStats(User user)
         {
             using var db = new AppDbContext();
 
-            var customer = GetCurrentCustomer(db, user);
+            var reservationService = new ReservationService(db);
+            var favoriteService = new FavoriteService(db);
+            var supportService = new SupportTicketService(db);
 
-            if (customer == null)
-            {
-                ReservationsCountText.Text = "0";
-                FavoritesCountText.Text = "0";
-                SupportTicketsText.Text = "0";
-                return;
-            }
-
-            ReservationsCountText.Text = db.Reservations
-                .Count(r =>
-                    r.CustomerId == customer.CustomerId &&
-                    r.Status != ReservationStatus.Cancelled &&
-                    r.EndDate >= DateTime.Now)
+            ReservationsCountText.Text = reservationService
+                .GetActiveReservationsCount(user.Email)
                 .ToString();
 
-            FavoritesCountText.Text = db.FavoriteCars
-                .Count(f => f.UserId == user.UserId)
+            FavoritesCountText.Text = favoriteService
+                .GetFavoriteCount(user.UserId)
                 .ToString();
 
-            SupportTicketsText.Text = db.SupportTickets
-                .Count(t => t.UserId == user.UserId && t.Status == "Open")
+            SupportTicketsText.Text = supportService
+                .GetOpenTicketCount(user.UserId)
                 .ToString();
         }
 
         private void LoadUpcomingReservation(User user)
         {
             using var db = new AppDbContext();
+            var reservationService = new ReservationService(db);
 
-            var customer = GetCurrentCustomer(db, user);
-
-            if (customer == null)
-            {
-                ShowNoUpcomingReservation();
-                return;
-            }
-
-            var upcomingReservation = db.Reservations
-                .Include(r => r.Car)
-                .Where(r =>
-                    r.CustomerId == customer.CustomerId &&
-                    r.Status != ReservationStatus.Cancelled &&
-                    r.EndDate >= DateTime.Now)
-                .OrderBy(r => r.StartDate)
-                .FirstOrDefault();
+            var upcomingReservation = reservationService.GetUpcomingReservation(user.Email);
 
             if (upcomingReservation == null)
             {
@@ -138,21 +111,11 @@ namespace Project.Views.Dashboard
         {
             using var db = new AppDbContext();
 
-            var latestFavorite = db.FavoriteCars
-                .Include(f => f.Car)
-                .Where(f => f.UserId == user.UserId)
-                .OrderByDescending(f => f.Id)
-                .FirstOrDefault();
+            var favoriteService = new FavoriteService(db);
+            var reservationService = new ReservationService(db);
 
-            var customer = GetCurrentCustomer(db, user);
-
-            var latestReservation = customer == null
-                ? null
-                : db.Reservations
-                    .Include(r => r.Car)
-                    .Where(r => r.CustomerId == customer.CustomerId)
-                    .OrderByDescending(r => r.ReservationId)
-                    .FirstOrDefault();
+            var latestFavorite = favoriteService.GetLatestFavorite(user.UserId);
+            var latestReservation = reservationService.GetLatestReservation(user.Email);
 
             string activity = "";
 
