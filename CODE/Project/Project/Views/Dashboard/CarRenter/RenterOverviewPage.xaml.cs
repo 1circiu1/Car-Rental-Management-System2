@@ -1,5 +1,6 @@
 using CarRental.Backend.Data;
 using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -21,19 +22,18 @@ namespace Project.Views.Dashboard.CarRenter
                 return;
 
             using var db = new AppDbContext();
+            var ownerService = new OwnerDashboardService(db);
 
-            var currentUserId = SessionManager.CurrentUser.UserId;
+            int currentUserId = SessionManager.CurrentUser.UserId;
 
-            var cars = db.Cars
-                .Where(c => c.UserId == currentUserId)
-                .ToList();
+            var cars = ownerService.GetOwnerCars(currentUserId);
 
-            int totalCars = cars.Count;
-            int availableCars = cars.Count(c => c.Status == CarStatus.Available);
-            int rentedCars = cars.Count(c => c.Status == CarStatus.Rented);
-            int maintenanceCars = cars.Count(c => c.Status == CarStatus.Maintenance);
+            int totalCars = ownerService.GetListedCarsCount(currentUserId);
+            int availableCars = ownerService.GetAvailableCarsCount(currentUserId);
+            int rentedCars = ownerService.GetRentedCarsCount(currentUserId);
+            int maintenanceCars = ownerService.GetMaintenanceCarsCount(currentUserId);
 
-            decimal potentialMonth = cars.Sum(c => c.PricePerDay * 30);
+            decimal potentialMonth = ownerService.GetPotentialMonthlyRevenue(currentUserId);
 
             ListedCarsText.Text = totalCars.ToString();
             AvailableCarsText.Text = availableCars.ToString();

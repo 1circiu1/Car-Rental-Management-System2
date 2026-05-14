@@ -6,7 +6,6 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Spacing="20">
 
-            <!-- Header -->
             <StackPanel>
                 <TextBlock Text="Rental Requests"
                            FontSize="24"
@@ -17,7 +16,6 @@
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
             </StackPanel>
 
-            <!-- Stats -->
             <Grid ColumnSpacing="16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -25,38 +23,40 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0"
-                        Padding="20"
-                        CornerRadius="12"
+                <Border Grid.Column="0" Padding="20" CornerRadius="12"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
                         <TextBlock Text="Pending Requests" FontSize="14"/>
-                        <TextBlock Text="3" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="PendingRequestsText"
+                                   Text="0"
+                                   FontSize="28"
+                                   FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
 
-                <Border Grid.Column="1"
-                        Padding="20"
-                        CornerRadius="12"
+                <Border Grid.Column="1" Padding="20" CornerRadius="12"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
                         <TextBlock Text="Approved" FontSize="14"/>
-                        <TextBlock Text="5" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="ApprovedRequestsText"
+                                   Text="0"
+                                   FontSize="28"
+                                   FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
 
-                <Border Grid.Column="2"
-                        Padding="20"
-                        CornerRadius="12"
+                <Border Grid.Column="2" Padding="20" CornerRadius="12"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
                         <TextBlock Text="Rejected" FontSize="14"/>
-                        <TextBlock Text="1" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="RejectedRequestsText"
+                                   Text="0"
+                                   FontSize="28"
+                                   FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
             </Grid>
 
-            <!-- Requests Section -->
             <Border Padding="20"
                     CornerRadius="12"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
@@ -73,198 +73,20 @@
                                    FontSize="18"
                                    FontWeight="SemiBold"/>
 
-                        <ComboBox Grid.Column="1"
+                        <ComboBox x:Name="RequestsFilterBox"
+                                  Grid.Column="1"
                                   SelectedIndex="0"
-                                  Width="160">
+                                  Width="160"
+                                  SelectionChanged="RequestsFilterBox_SelectionChanged">
                             <ComboBoxItem Content="All requests"/>
                             <ComboBoxItem Content="Pending"/>
-                            <ComboBoxItem Content="Approved"/>
-                            <ComboBoxItem Content="Rejected"/>
+                            <ComboBoxItem Content="Confirmed"/>
+                            <ComboBoxItem Content="Cancelled"/>
                         </ComboBox>
                     </Grid>
 
-                    <!-- Request 1 -->
-                    <Border Padding="16"
-                            CornerRadius="10"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1">
-
-                        <Grid ColumnSpacing="16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Border Grid.Column="0"
-                                    Width="48"
-                                    Height="48"
-                                    CornerRadius="24"
-                                    Background="#221A6EF5">
-                                <TextBlock Text="AM"
-                                           FontSize="14"
-                                           FontWeight="SemiBold"
-                                           Foreground="#FF6EA8FE"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
-                            </Border>
-
-                            <StackPanel Grid.Column="1" Spacing="6">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="Andrei M."
-                                               FontSize="17"
-                                               FontWeight="SemiBold"/>
-
-                                    <Border Padding="8,3"
-                                            CornerRadius="10"
-                                            Background="#22FF9500">
-                                        <TextBlock Text="Pending"
-                                                   FontSize="11"
-                                                   Foreground="#FFFF9500"/>
-                                    </Border>
-                                </StackPanel>
-
-                                <TextBlock Text="Tesla Model 3 : May 14 - May 17 : 3 days"
-                                           FontSize="13"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-
-                                <TextBlock Text="Estimated total: $270"
-                                           FontSize="14"
-                                           FontWeight="SemiBold"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="2"
-                                        Orientation="Horizontal"
-                                        Spacing="8"
-                                        VerticalAlignment="Center">
-                                <Button Content="Approve"/>
-                                <Button Content="Reject"/>
-                                <Button Content="Details"
-                                Click="Details_Click"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <!-- Request 2 -->
-                    <Border Padding="16"
-                            CornerRadius="10"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1">
-
-                        <Grid ColumnSpacing="16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Border Grid.Column="0"
-                                    Width="48"
-                                    Height="48"
-                                    CornerRadius="24"
-                                    Background="#2228CD41">
-                                <TextBlock Text="EP"
-                                           FontSize="14"
-                                           FontWeight="SemiBold"
-                                           Foreground="#FF34C759"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
-                            </Border>
-
-                            <StackPanel Grid.Column="1" Spacing="6">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="Elena P."
-                                               FontSize="17"
-                                               FontWeight="SemiBold"/>
-
-                                    <Border Padding="8,3"
-                                            CornerRadius="10"
-                                            Background="#2234C759">
-                                        <TextBlock Text="Approved"
-                                                   FontSize="11"
-                                                   Foreground="#FF34C759"/>
-                                    </Border>
-                                </StackPanel>
-
-                                <TextBlock Text="BMW 3 Series : May 11 - May 13 : 2 days"
-                                           FontSize="13"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-
-                                <TextBlock Text="Estimated total: $130"
-                                           FontSize="14"
-                                           FontWeight="SemiBold"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="2"
-                                        Orientation="Horizontal"
-                                        Spacing="8"
-                                        VerticalAlignment="Center">
-                                <Button Content="Details"
-                                Click="Details_Click"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <!-- Request 3 -->
-                    <Border Padding="16"
-                            CornerRadius="10"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1">
-
-                        <Grid ColumnSpacing="16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Border Grid.Column="0"
-                                    Width="48"
-                                    Height="48"
-                                    CornerRadius="24"
-                                    Background="#22FF3B30">
-                                <TextBlock Text="RD"
-                                           FontSize="14"
-                                           FontWeight="SemiBold"
-                                           Foreground="#FFFF453A"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
-                            </Border>
-
-                            <StackPanel Grid.Column="1" Spacing="6">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="Radu D."
-                                               FontSize="17"
-                                               FontWeight="SemiBold"/>
-
-                                    <Border Padding="8,3"
-                                            CornerRadius="10"
-                                            Background="#22FF3B30">
-                                        <TextBlock Text="Rejected"
-                                                   FontSize="11"
-                                                   Foreground="#FFFF453A"/>
-                                    </Border>
-                                </StackPanel>
-
-                                <TextBlock Text="Audi A4 : May 09 - May 12 : 3 days"
-                                           FontSize="13"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-
-                                <TextBlock Text="Estimated total: $165"
-                                           FontSize="14"
-                                           FontWeight="SemiBold"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="2"
-                                        Orientation="Horizontal"
-                                        Spacing="8"
-                                        VerticalAlignment="Center">
-                                <Button Content="Details"
-                                Click="Details_Click"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
+                    <StackPanel x:Name="RequestsListPanel"
+                                Spacing="12"/>
                 </StackPanel>
             </Border>
 

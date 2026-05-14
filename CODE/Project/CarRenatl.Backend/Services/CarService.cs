@@ -40,6 +40,41 @@ namespace CarRental.Backend.Services
             return _context.Cars.ToList();
         }
 
+        public List<Car> GetCarsByOwner(int ownerUserId)
+        {
+            return _context.Cars
+                .Where(c => c.UserId == ownerUserId)
+                .ToList();
+        }
+
+        public void ToggleMaintenance(int carId)
+        {
+            var car = GetCarById(carId);
+
+            if (car == null)
+                return;
+
+            car.Status = car.Status == CarStatus.Maintenance
+                ? CarStatus.Available
+                : CarStatus.Maintenance;
+
+            _context.SaveChanges();
+        }
+
+        public int CountOwnerCarsByStatus(int ownerUserId, CarStatus status)
+        {
+            return _context.Cars
+                .Count(c => c.UserId == ownerUserId && c.Status == status);
+        }
+
+        public int CountOwnerCarsNeedingReports(int ownerUserId)
+        {
+            return _context.Cars
+                .Count(c => c.UserId == ownerUserId &&
+                           (c.Status == CarStatus.Rented ||
+                            c.Status == CarStatus.Maintenance));
+        }
+
         public void UpdateCar(Car car)
         {
             _context.Cars.Update(car);

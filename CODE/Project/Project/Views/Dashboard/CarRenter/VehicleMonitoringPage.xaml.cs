@@ -1,5 +1,6 @@
 using CarRental.Backend.Data;
 using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -22,16 +23,23 @@ namespace Project.Views.Dashboard.CarRenter
                 return;
 
             using var db = new AppDbContext();
+            var carService = new CarService(db);
 
-            var currentUserId = SessionManager.CurrentUser.UserId;
+            int currentUserId = SessionManager.CurrentUser.UserId;
 
-            var cars = db.Cars
-                .Where(c => c.UserId == currentUserId)
-                .ToList();
+            var cars = carService.GetCarsByOwner(currentUserId);
 
-            NeedsInspectionText.Text = cars.Count(c => c.Status == CarStatus.Rented).ToString();
-            InMaintenanceText.Text = cars.Count(c => c.Status == CarStatus.Maintenance).ToString();
-            ReportsThisMonthText.Text = cars.Count(c => c.Status == CarStatus.Rented || c.Status == CarStatus.Maintenance).ToString();
+            NeedsInspectionText.Text = carService
+                .CountOwnerCarsByStatus(currentUserId, CarStatus.Rented)
+                .ToString();
+
+            InMaintenanceText.Text = carService
+                .CountOwnerCarsByStatus(currentUserId, CarStatus.Maintenance)
+                .ToString();
+
+            ReportsThisMonthText.Text = carService
+                .CountOwnerCarsNeedingReports(currentUserId)
+                .ToString();
 
             var selectedFilter = GetSelectedFilter();
 
@@ -254,8 +262,9 @@ namespace Project.Views.Dashboard.CarRenter
             int carId = (int)button.Tag;
 
             using var db = new AppDbContext();
+            var carService = new CarService(db);
 
-            var car = db.Cars.FirstOrDefault(c => c.CarId == carId);
+            var car = carService.GetCarById(carId);
 
             if (car == null)
                 return;
@@ -285,17 +294,9 @@ namespace Project.Views.Dashboard.CarRenter
             int carId = (int)button.Tag;
 
             using var db = new AppDbContext();
+            var carService = new CarService(db);
 
-            var car = db.Cars.FirstOrDefault(c => c.CarId == carId);
-
-            if (car == null)
-                return;
-
-            car.Status = car.Status == CarStatus.Maintenance
-                ? CarStatus.Available
-                : CarStatus.Maintenance;
-
-            db.SaveChanges();
+            carService.ToggleMaintenance(carId);
 
             LoadVehicles();
         }

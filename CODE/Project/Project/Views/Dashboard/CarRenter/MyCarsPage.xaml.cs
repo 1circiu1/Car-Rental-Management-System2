@@ -1,5 +1,6 @@
 using CarRental.Backend.Data;
 using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -26,12 +27,11 @@ namespace Project.Views.Dashboard.CarRenter
                 return;
 
             using var db = new AppDbContext();
+            var carService = new CarService(db);
 
-            var currentUserId = SessionManager.CurrentUser.UserId;
+            int currentUserId = SessionManager.CurrentUser.UserId;
 
-            var cars = db.Cars
-                .Where(c => c.UserId == currentUserId)
-                .ToList();
+            var cars = carService.GetCarsByOwner(currentUserId);
 
             TotalCarsText.Text = cars.Count.ToString();
             AvailableCarsText.Text = cars.Count(c => c.Status == CarStatus.Available).ToString();
@@ -217,8 +217,9 @@ namespace Project.Views.Dashboard.CarRenter
             int carId = (int)button.Tag;
 
             using var db = new AppDbContext();
+            var carService = new CarService(db);
 
-            var car = db.Cars.FirstOrDefault(c => c.CarId == carId);
+            var car = carService.GetCarById(carId);
 
             if (car == null)
                 return;
@@ -347,7 +348,7 @@ namespace Project.Views.Dashboard.CarRenter
                 car.Status = selectedStatus;
             }
 
-            db.SaveChanges();
+            carService.UpdateCar(car);
 
             LoadCars();
         }
@@ -375,14 +376,9 @@ namespace Project.Views.Dashboard.CarRenter
                 return;
 
             using var db = new AppDbContext();
+            var carService = new CarService(db);
 
-            var car = db.Cars.FirstOrDefault(c => c.CarId == carId);
-
-            if (car == null)
-                return;
-
-            db.Cars.Remove(car);
-            db.SaveChanges();
+            carService.DeleteCar(carId);
 
             LoadCars();
         }
@@ -395,117 +391,107 @@ namespace Project.Views.Dashboard.CarRenter
             int carId = (int)button.Tag;
 
             using var db = new AppDbContext();
+            var carService = new CarService(db);
 
-            var car = db.Cars.FirstOrDefault(c => c.CarId == carId);
-
-            if (car == null)
-                return;
-
-            car.Status = car.Status == CarStatus.Maintenance
-                ? CarStatus.Available
-                : CarStatus.Maintenance;
-
-            db.SaveChanges();
+            carService.ToggleMaintenance(carId);
 
             LoadCars();
         }
 
         private async void AddCar_Click(object sender, RoutedEventArgs e)
-{
-    string selectedImagePath = "";
-
-    var brandBox = new TextBox { Header = "Brand", PlaceholderText = "BMW, Audi, Tesla..." };
-    var modelBox = new TextBox { Header = "Model", PlaceholderText = "3 Series, A4, Model 3..." };
-    var yearBox = new TextBox { Header = "Year", PlaceholderText = "2021" };
-    var plateBox = new TextBox { Header = "Plate Number", PlaceholderText = "CJ-10-ABC" };
-    var priceBox = new TextBox { Header = "Price per day", PlaceholderText = "65" };
-
-    var imageText = new TextBlock
-    {
-        Text = "No image selected",
-        FontSize = 12,
-        Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"]
-    };
-
-    var selectImageButton = new Button
-    {
-        Content = "Select Car Image"
-    };
-
-    selectImageButton.Click += async (s, args) =>
-    {
-        var picker = new FileOpenPicker();
-
-        var hwnd = WindowNative.GetWindowHandle(MainWindow.Current);
-        InitializeWithWindow.Initialize(picker, hwnd);
-
-        picker.FileTypeFilter.Add(".jpg");
-        picker.FileTypeFilter.Add(".jpeg");
-        picker.FileTypeFilter.Add(".png");
-
-        var file = await picker.PickSingleFileAsync();
-
-        if (file != null)
         {
-            selectedImagePath = file.Path;
-            imageText.Text = Path.GetFileName(file.Path);
-        }
-    };
+            string selectedImagePath = "";
 
-    var form = new StackPanel
-    {
-        Spacing = 12
-    };
+            var brandBox = new TextBox { Header = "Brand", PlaceholderText = "BMW, Audi, Tesla..." };
+            var modelBox = new TextBox { Header = "Model", PlaceholderText = "3 Series, A4, Model 3..." };
+            var yearBox = new TextBox { Header = "Year", PlaceholderText = "2021" };
+            var plateBox = new TextBox { Header = "Plate Number", PlaceholderText = "CJ-10-ABC" };
+            var priceBox = new TextBox { Header = "Price per day", PlaceholderText = "65" };
 
-    form.Children.Add(brandBox);
-    form.Children.Add(modelBox);
-    form.Children.Add(yearBox);
-    form.Children.Add(plateBox);
-    form.Children.Add(priceBox);
-    form.Children.Add(selectImageButton);
-    form.Children.Add(imageText);
+            var imageText = new TextBlock
+            {
+                Text = "No image selected",
+                FontSize = 12,
+                Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"]
+            };
 
-    var dialog = new ContentDialog
-    {
-        Title = "Add New Car",
-        Content = form,
-        PrimaryButtonText = "Add Car",
-        CloseButtonText = "Cancel",
-        DefaultButton = ContentDialogButton.Primary,
-        XamlRoot = this.XamlRoot
-    };
+            var selectImageButton = new Button
+            {
+                Content = "Select Car Image"
+            };
 
-    var result = await dialog.ShowAsync();
+            selectImageButton.Click += async (s, args) =>
+            {
+                var picker = new FileOpenPicker();
 
-    if (result != ContentDialogResult.Primary)
-        return;
+                var hwnd = WindowNative.GetWindowHandle(MainWindow.Current);
+                InitializeWithWindow.Initialize(picker, hwnd);
 
-    if (!int.TryParse(yearBox.Text, out int year))
-        return;
+                picker.FileTypeFilter.Add(".jpg");
+                picker.FileTypeFilter.Add(".jpeg");
+                picker.FileTypeFilter.Add(".png");
 
-    if (!decimal.TryParse(priceBox.Text, out decimal price))
-        return;
+                var file = await picker.PickSingleFileAsync();
 
-    using var db = new AppDbContext();
+                if (file != null)
+                {
+                    selectedImagePath = file.Path;
+                    imageText.Text = Path.GetFileName(file.Path);
+                }
+            };
 
-    var car = new Car
-    {
-        Brand = brandBox.Text,
-        Model = modelBox.Text,
-        Year = year,
-        PlateNumber = plateBox.Text,
-        PricePerDay = price,
-        ImagePath = selectedImagePath,
-        Status = CarStatus.Available,
-        UserId = SessionManager.CurrentUser.UserId
-    };
+            var form = new StackPanel
+            {
+                Spacing = 12
+            };
 
-    db.Cars.Add(car);
-    db.SaveChanges();
+            form.Children.Add(brandBox);
+            form.Children.Add(modelBox);
+            form.Children.Add(yearBox);
+            form.Children.Add(plateBox);
+            form.Children.Add(priceBox);
+            form.Children.Add(selectImageButton);
+            form.Children.Add(imageText);
 
-    LoadCars();
-}
+            var dialog = new ContentDialog
+            {
+                Title = "Add New Car",
+                Content = form,
+                PrimaryButtonText = "Add Car",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                XamlRoot = this.XamlRoot
+            };
 
-          
+            var result = await dialog.ShowAsync();
+
+            if (result != ContentDialogResult.Primary)
+                return;
+
+            if (!int.TryParse(yearBox.Text, out int year))
+                return;
+
+            if (!decimal.TryParse(priceBox.Text, out decimal price))
+                return;
+
+            using var db = new AppDbContext();
+            var carService = new CarService(db);
+
+            var car = new Car
+            {
+                Brand = brandBox.Text,
+                Model = modelBox.Text,
+                Year = year,
+                PlateNumber = plateBox.Text,
+                PricePerDay = price,
+                ImagePath = selectedImagePath,
+                Status = CarStatus.Available,
+                UserId = SessionManager.CurrentUser.UserId
+            };
+
+            carService.AddCar(car);
+
+            LoadCars();
         }
     }
+}

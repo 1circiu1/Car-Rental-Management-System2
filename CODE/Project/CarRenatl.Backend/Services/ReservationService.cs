@@ -132,6 +132,13 @@ namespace CarRental.Backend.Services
                 .FirstOrDefault(c => c.Email == email);
         }
 
+        public Reservation GetReservationById(int reservationId)
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .FirstOrDefault(r => r.ReservationId == reservationId);
+        }
+
         public void CancelReservation(int reservationId)
         {
             var reservation = _context.Reservations
@@ -187,6 +194,53 @@ namespace CarRental.Backend.Services
 
             decimal totalDays = Math.Ceiling((decimal)duration.TotalDays);
             return totalDays * car.PricePerDay;
+        }
+
+
+
+
+
+
+        // OWNER SERVICES
+        public List<Reservation> GetOwnerReservations(int ownerUserId)
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Include(r => r.Customer)
+                .Where(r => r.Car.UserId == ownerUserId)
+                .OrderByDescending(r => r.StartDate)
+                .ToList();
+        }
+
+        public int CountOwnerReservationsByStatus(int ownerUserId, ReservationStatus status)
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Count(r => r.Car.UserId == ownerUserId && r.Status == status);
+        }
+
+        public void ConfirmReservation(int reservationId)
+        {
+            var reservation = _context.Reservations
+                .FirstOrDefault(r => r.ReservationId == reservationId);
+
+            if (reservation == null)
+                return;
+
+            reservation.Status = ReservationStatus.Confirmed;
+            _context.SaveChanges();
+        }
+
+        public void RejectReservation(int reservationId)
+        {
+            var reservation = _context.Reservations
+                .FirstOrDefault(r => r.ReservationId == reservationId);
+
+            if (reservation == null)
+                return;
+
+            reservation.Status = ReservationStatus.Cancelled;
+            _context.SaveChanges();
         }
     }
 }

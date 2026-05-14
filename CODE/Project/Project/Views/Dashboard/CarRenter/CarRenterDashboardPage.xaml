@@ -83,7 +83,7 @@
                         Click="NavButton_Click">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <FontIcon Glyph="&#xE804;" FontSize="14" Foreground="#CCFFFFFF"/>
-                        <TextBlock Text="My Fleet" Foreground="#CCFFFFFF" FontSize="13"/>
+                        <TextBlock Text="My Cars" Foreground="#CCFFFFFF" FontSize="13"/>
                     </StackPanel>
                 </Button>
 
@@ -226,12 +226,7 @@
                                    Foreground="#A78BFA"/>
                     </StackPanel>
 
-                    <Button Grid.Column="1"
-                            x:Name="BtnPrimaryAction"
-                            Content="+ List a car"
-                            Style="{StaticResource AccentButtonStyle}"
-                            Click="PrimaryAction_Click"
-                            Margin="0,24,0,0"/>
+ 
                 </Grid>
             </Border>
 

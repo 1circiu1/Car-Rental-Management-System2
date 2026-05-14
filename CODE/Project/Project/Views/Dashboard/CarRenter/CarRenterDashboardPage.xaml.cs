@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using Project.Views.Auth;
 
-
 namespace Project.Views.Dashboard.CarRenter
 {
     public sealed partial class CarRenterDashboardPage : Page
@@ -13,14 +12,14 @@ namespace Project.Views.Dashboard.CarRenter
 
         public CarRenterDashboardPage()
         {
-            this.InitializeComponent();
-            this.Loaded += CarRenterDashboardPage_Loaded;
+            InitializeComponent();
+            Loaded += CarRenterDashboardPage_Loaded;
         }
 
         private void CarRenterDashboardPage_Loaded(object sender, RoutedEventArgs e)
         {
             LoadUserInfo();
-            SetActivePage(BtnOverview, typeof(RenterOverviewPage), "Owner Overview", "+ List a car");
+            SetActivePage(BtnOverview, typeof(RenterOverviewPage), "Owner Overview");
         }
 
         private void LoadUserInfo()
@@ -40,39 +39,34 @@ namespace Project.Views.Dashboard.CarRenter
 
         private void NavButton_Click(object sender, RoutedEventArgs e)
         {
-            
-
-           
-
-            var btn = sender as Button;
-            if (btn == null || btn == _activeNavButton) return; 
-            
-            System.Diagnostics.Debug.WriteLine($"Clicked: {btn.Tag}");
+            if (sender is not Button btn || btn == _activeNavButton)
+                return;
 
             switch (btn.Tag?.ToString())
             {
                 case "Overview":
-                    SetActivePage(btn, typeof(RenterOverviewPage), "Owner Overview", "+ List a car");
+                    SetActivePage(btn, typeof(RenterOverviewPage), "Owner Overview");
                     break;
 
                 case "MyFleet":
-                    SetActivePage(btn, typeof(MyCarsPage), "My Fleet", "+ List a car");
+                    SetActivePage(btn, typeof(MyCarsPage), "My Cars");
                     break;
 
                 case "BookingRequests":
-                    SetActivePage(btn, typeof(RentalRequestsPage), "Booking Requests", null);
+                    SetActivePage(btn, typeof(RentalRequestsPage), "Booking Requests");
                     break;
 
                 case "Revenue":
-                    SetActivePage(btn, typeof(EarningsPage), "Revenue", null);
+                    SetActivePage(btn, typeof(EarningsPage), "Revenue");
                     break;
+
                 case "VehicleMonitoring":
-                    SetActivePage(btn, typeof(VehicleMonitoringPage), "Vehicle Monitoring", null);
+                    SetActivePage(btn, typeof(VehicleMonitoringPage), "Vehicle Monitoring");
                     break;
             }
         }
 
-        private void SetActivePage(Button btn, Type pageType, string title, string actionLabel)
+        private void SetActivePage(Button btn, Type pageType, string title)
         {
             if (_activeNavButton != null)
                 SetNavButtonInactive(_activeNavButton);
@@ -83,16 +77,6 @@ namespace Project.Views.Dashboard.CarRenter
             PageTitle.Text = title;
             PageSubtitle.Text = DateTime.Now.ToString("dddd, dd MMMM yyyy");
 
-            if (actionLabel != null)
-            {
-                BtnPrimaryAction.Content = actionLabel;
-                BtnPrimaryAction.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                BtnPrimaryAction.Visibility = Visibility.Collapsed;
-            }
-
             ContentFrame.Navigate(pageType);
         }
 
@@ -100,8 +84,8 @@ namespace Project.Views.Dashboard.CarRenter
         {
             btn.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(30, 255, 255, 255));
 
-            var panel = btn.Content as StackPanel;
-            if (panel == null) return;
+            if (btn.Content is not StackPanel panel)
+                return;
 
             foreach (var child in panel.Children)
             {
@@ -117,8 +101,8 @@ namespace Project.Views.Dashboard.CarRenter
         {
             btn.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0, 0, 0, 0));
 
-            var panel = btn.Content as StackPanel;
-            if (panel == null) return;
+            if (btn.Content is not StackPanel panel)
+                return;
 
             foreach (var child in panel.Children)
             {
@@ -130,11 +114,6 @@ namespace Project.Views.Dashboard.CarRenter
             }
         }
 
-        private void PrimaryAction_Click(object sender, RoutedEventArgs e)
-        {
-            SetActivePage(BtnMyFleet, typeof(MyCarsPage), "My Fleet", "+ List a car");
-        }
-
         private void SignOut_Click(object sender, RoutedEventArgs e)
         {
             SessionManager.CurrentUser = null;
@@ -143,22 +122,22 @@ namespace Project.Views.Dashboard.CarRenter
 
         public void NavigateToMyFleet()
         {
-            SetActivePage(BtnMyFleet, typeof(MyCarsPage), "My Fleet", "+ List a car");
+            SetActivePage(BtnMyFleet, typeof(MyCarsPage), "My Cars");
         }
 
         public void NavigateToBookingRequests()
         {
-            SetActivePage(BtnBookingRequests, typeof(RentalRequestsPage), "Booking Requests", null);
+            SetActivePage(BtnBookingRequests, typeof(RentalRequestsPage), "Booking Requests");
         }
 
         public void NavigateToRevenue()
         {
-            SetActivePage(BtnRevenue, typeof(EarningsPage), "Revenue", null);
+            SetActivePage(BtnRevenue, typeof(EarningsPage), "Revenue");
         }
 
         public void NavigateToVehicleMonitoring()
         {
-            SetActivePage(BtnVehicleStatus, typeof(VehicleMonitoringPage), "Vehicle Monitoring", null);
+            SetActivePage(BtnVehicleStatus, typeof(VehicleMonitoringPage), "Vehicle Monitoring");
         }
     }
 }
