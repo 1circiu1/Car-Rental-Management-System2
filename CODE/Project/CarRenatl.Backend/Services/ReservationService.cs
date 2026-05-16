@@ -10,6 +10,7 @@ namespace CarRental.Backend.Services
     public class ReservationService
     {
         private readonly AppDbContext _context;
+        private const decimal COMPANY_FEE_PERCENT = 0.15m;
 
         public ReservationService(AppDbContext context)
         {
@@ -241,6 +242,95 @@ namespace CarRental.Backend.Services
 
             reservation.Status = ReservationStatus.Cancelled;
             _context.SaveChanges();
+        }
+
+        public decimal GetOwnerTotalRevenue(int ownerUserId)
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Where(r => r.Car.UserId == ownerUserId &&
+                           (r.Status == ReservationStatus.Confirmed ||
+                            r.Status == ReservationStatus.Completed))
+                .Sum(r => r.TotalCost * (1 - COMPANY_FEE_PERCENT));
+        }
+
+        public decimal GetOwnerMonthlyRevenue(int ownerUserId)
+        {
+            var now = DateTime.Now;
+
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Where(r => r.Car.UserId == ownerUserId &&
+                           (r.Status == ReservationStatus.Confirmed ||
+                            r.Status == ReservationStatus.Completed) &&
+                           r.StartDate.Month == now.Month &&
+                           r.StartDate.Year == now.Year)
+                .Sum(r => r.TotalCost * (1 - COMPANY_FEE_PERCENT));
+        }
+
+        public decimal GetOwnerPendingRevenue(int ownerUserId)
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Where(r => r.Car.UserId == ownerUserId &&
+                            r.Status == ReservationStatus.Pending)
+                .Sum(r => r.TotalCost * (1 - COMPANY_FEE_PERCENT));
+        }
+
+        public int GetOwnerCompletedRentalsCount(int ownerUserId)
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Count(r => r.Car.UserId == ownerUserId &&
+                           (r.Status == ReservationStatus.Confirmed ||
+                            r.Status == ReservationStatus.Completed));
+        }
+
+        public List<Reservation> GetOwnerRecentEarnings(int ownerUserId, int count = 5)
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Where(r => r.Car.UserId == ownerUserId &&
+                           (r.Status == ReservationStatus.Confirmed ||
+                            r.Status == ReservationStatus.Completed))
+                .OrderByDescending(r => r.StartDate)
+                .Take(count)
+                .ToList();
+        }
+
+        public Car GetOwnerTopEarningCar(int ownerUserId)
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Where(r => r.Car.UserId == ownerUserId &&
+                           (r.Status == ReservationStatus.Confirmed ||
+                            r.Status == ReservationStatus.Completed))
+                .GroupBy(r => r.Car)
+                .OrderByDescending(g => g.Sum(r => r.TotalCost))
+                .Select(g => g.Key)
+                .FirstOrDefault();
+        }
+
+        public decimal GetCarRevenue(int carId)
+        {
+            return _context.Reservations
+                .Where(r => r.CarId == carId &&
+                           (r.Status == ReservationStatus.Confirmed ||
+                            r.Status == ReservationStatus.Completed))
+                .Sum(r => r.TotalCost * (1 - COMPANY_FEE_PERCENT));
+        }
+
+        public decimal GetOwnerRevenueForMonth(int ownerUserId, int month, int year)
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Where(r =>
+                    r.Car.UserId == ownerUserId &&
+                    (r.Status == ReservationStatus.Confirmed ||
+                     r.Status == ReservationStatus.Completed) &&
+                    r.StartDate.Month == month &&
+                    r.StartDate.Year == year)
+                .Sum(r => r.TotalCost);
         }
     }
 }

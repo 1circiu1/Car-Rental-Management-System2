@@ -32,7 +32,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
                         <TextBlock Text="Total Earnings" FontSize="14"/>
-                        <TextBlock Text="$1,245" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="TotalEarningsText" Text="$0.00" FontSize="28" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
 
@@ -42,7 +42,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
                         <TextBlock Text="This Month" FontSize="14"/>
-                        <TextBlock Text="$420" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="MonthlyEarningsText" Text="$0.00" FontSize="28" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
 
@@ -52,7 +52,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
                         <TextBlock Text="Completed Rentals" FontSize="14"/>
-                        <TextBlock Text="14" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="CompletedRentalsText" Text="0" FontSize="28" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
 
@@ -62,7 +62,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
                         <TextBlock Text="Pending Payout" FontSize="14"/>
-                        <TextBlock Text="$180" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="PendingPayoutText" Text="$0.00" FontSize="28" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -81,111 +81,14 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
 
                     <StackPanel Spacing="16">
+
                         <TextBlock Text="Recent Transactions"
                                    FontSize="18"
-                                   FontWeight="SemiBold"/>
+                                   FontWeight="SemiBold"/>  
 
-                        <Border Padding="14"
-                                CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
-                            <Grid ColumnSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+                        <StackPanel x:Name="RecentTransactionsPanel"
+                                    Spacing="16"/>
 
-                                <Border Width="38" Height="38" CornerRadius="19"
-                                        Background="#2234C759">
-                                    <FontIcon Glyph="&#xE8C7;"
-                                              Foreground="#FF34C759"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                                </Border>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Tesla Model 3 rental completed"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Text="May 14 - May 17 : 3 days"
-                                               FontSize="13"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                </StackPanel>
-
-                                <TextBlock Grid.Column="2"
-                                           Text="+$270"
-                                           FontWeight="SemiBold"
-                                           VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
-
-                        <Border Padding="14"
-                                CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
-                            <Grid ColumnSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Border Width="38" Height="38" CornerRadius="19"
-                                        Background="#2234C759">
-                                    <FontIcon Glyph="&#xE8C7;"
-                                              Foreground="#FF34C759"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                                </Border>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="BMW 3 Series rental completed"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Text="May 11 - May 13 : 2 days"
-                                               FontSize="13"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                </StackPanel>
-
-                                <TextBlock Grid.Column="2"
-                                           Text="+$130"
-                                           FontWeight="SemiBold"
-                                           VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
-
-                        <Border Padding="14"
-                                CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
-                            <Grid ColumnSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Border Width="38" Height="38" CornerRadius="19"
-                                        Background="#2234C759">
-                                    <FontIcon Glyph="&#xE8C7;"
-                                              Foreground="#FF34C759"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                                </Border>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Audi A4 rental completed"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Text="May 05 - May 08 : 3 days"
-                                               FontSize="13"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                </StackPanel>
-
-                                <TextBlock Grid.Column="2"
-                                           Text="+$165"
-                                           FontWeight="SemiBold"
-                                           VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
                     </StackPanel>
                 </Border>
 
@@ -210,11 +113,12 @@
                                       VerticalAlignment="Center"/>
                         </Border>
 
-                        <TextBlock Text="Tesla Model 3"
+                        <TextBlock x:Name="TopCarNameText" Text="No earnings yet"
                                    FontSize="18"
                                    FontWeight="SemiBold"/>
 
-                        <TextBlock Text="$620 earned this month from 6 completed rental days."
+                        <TextBlock x:Name="TopCarDetailsText"
+                                   Text="You don't have completed rentals yet."
                                    TextWrapping="Wrap"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
@@ -246,51 +150,67 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" Padding="16" CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
+                        <Border Grid.Column="0"
+            Padding="16"
+            CornerRadius="10"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1">
+
                             <StackPanel>
-                                <TextBlock Text="February"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="$210"
-                                           FontSize="22"
-                                           FontWeight="SemiBold"/>
+                                <TextBlock x:Name="Month1NameText"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <TextBlock x:Name="Month1RevenueText"
+                       FontSize="22"
+                       FontWeight="SemiBold"/>
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Column="1" Padding="16" CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
+                        <Border Grid.Column="1"
+            Padding="16"
+            CornerRadius="10"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1">
+
                             <StackPanel>
-                                <TextBlock Text="March"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="$315"
-                                           FontSize="22"
-                                           FontWeight="SemiBold"/>
+                                <TextBlock x:Name="Month2NameText"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <TextBlock x:Name="Month2RevenueText"
+                       FontSize="22"
+                       FontWeight="SemiBold"/>
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Column="2" Padding="16" CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
+                        <Border Grid.Column="2"
+            Padding="16"
+            CornerRadius="10"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1">
+
                             <StackPanel>
-                                <TextBlock Text="April"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="$300"
-                                           FontSize="22"
-                                           FontWeight="SemiBold"/>
+                                <TextBlock x:Name="Month3NameText"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <TextBlock x:Name="Month3RevenueText"
+                       FontSize="22"
+                       FontWeight="SemiBold"/>
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Column="3" Padding="16" CornerRadius="10"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1">
+                        <Border Grid.Column="3"
+            Padding="16"
+            CornerRadius="10"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1">
+
                             <StackPanel>
-                                <TextBlock Text="May"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="$420"
-                                           FontSize="22"
-                                           FontWeight="SemiBold"/>
+                                <TextBlock x:Name="Month4NameText"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <TextBlock x:Name="Month4RevenueText"
+                       FontSize="22"
+                       FontWeight="SemiBold"/>
                             </StackPanel>
                         </Border>
                     </Grid>

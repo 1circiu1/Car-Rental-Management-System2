@@ -52,7 +52,7 @@
                 <Border Grid.Column="3" Padding="20" CornerRadius="12"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel>
-                        <TextBlock Text="Potential / Month" FontSize="14"/>
+                        <TextBlock Text="Net Potential / Month" FontSize="14"/>
                         <TextBlock x:Name="PotentialMonthText" Text="$0" FontSize="28" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>

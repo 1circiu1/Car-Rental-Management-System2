@@ -33,7 +33,10 @@ namespace Project.Views.Dashboard.CarRenter
             int rentedCars = ownerService.GetRentedCarsCount(currentUserId);
             int maintenanceCars = ownerService.GetMaintenanceCarsCount(currentUserId);
 
-            decimal potentialMonth = ownerService.GetPotentialMonthlyRevenue(currentUserId);
+            const decimal COMPANY_FEE_PERCENT = 0.15m;
+
+            decimal grossPotentialMonth = ownerService.GetPotentialMonthlyRevenue(currentUserId);
+            decimal potentialMonth = grossPotentialMonth * (1 - COMPANY_FEE_PERCENT);
 
             ListedCarsText.Text = totalCars.ToString();
             AvailableCarsText.Text = availableCars.ToString();
@@ -77,7 +80,7 @@ namespace Project.Views.Dashboard.CarRenter
 
             FleetSummaryPanel.Children.Add(CreateSummaryCard(
                 "Monthly potential revenue",
-                $"Your fleet can generate approximately ${potentialMonth:0} per month if fully booked.",
+                $"Your fleet can generate approximately ${potentialMonth:0} net per month after DriveEase's 15% service fee.",
                 "Estimate",
                 "#22FF9500",
                 "#FFFF9500"
