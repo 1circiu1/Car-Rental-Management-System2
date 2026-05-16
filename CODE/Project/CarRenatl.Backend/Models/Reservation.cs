@@ -11,6 +11,8 @@ namespace CarRental.Backend.Models
     {
         Pending,
         Confirmed,
+        PickedUp,
+        Returned,
         Cancelled,
         Completed
     }
@@ -25,7 +27,11 @@ namespace CarRental.Backend.Models
         public decimal TotalCost { get; set; }
         public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
         public string PickupLocation { get; set; } = "";
+        public DateTime? PickedUpAt { get; set; }
+        public DateTime? ReturnedAt { get; set; }
 
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal LateFee { get; set; } = 0;
         public int CarId { get; set; }
         public int CustomerId { get; set; }
 

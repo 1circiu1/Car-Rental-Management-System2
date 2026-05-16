@@ -1,14 +1,11 @@
 using CarRental.Backend.Data;
 using CarRental.Backend.Models;
 using CarRental.Backend.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Project.Views.Dashboard.Customer
 {
@@ -189,23 +186,42 @@ namespace Project.Views.Dashboard.Customer
             string pickupLocation = selectedLocation.Content.ToString();
 
             using var db = new AppDbContext();
-
             var reservationService = new ReservationService(db);
 
-            bool success = reservationService.CreateReservation(
-                _car.CarId,
-                SessionManager.CurrentUser.Email,
-                start.Value,
-                end.Value,
-                pickupLocation);
-
-            if (!success)
+            if (!reservationService.CheckAvailability(_car.CarId, start.Value, end.Value))
             {
                 ErrorText.Text = "This car is already reserved during the selected period.";
                 return;
             }
 
-            Frame.Navigate(typeof(Project.Views.Dashboard.ReservationsPage));
+            decimal totalCost = reservationService.CalculateCost(
+                _car.CarId,
+                start.Value,
+                end.Value);
+
+            var paymentData = new PendingReservationData
+            {
+                CarId = _car.CarId,
+                CustomerEmail = SessionManager.CurrentUser.Email,
+                StartDate = start.Value,
+                EndDate = end.Value,
+                PickupLocation = pickupLocation,
+                TotalCost = totalCost,
+                CarName = $"{_car.Brand} {_car.Model}"
+            };
+
+            Frame.Navigate(typeof(PaymentPage), paymentData);
+        }
+
+        public class PendingReservationData
+        {
+            public int CarId { get; set; }
+            public string CustomerEmail { get; set; } = string.Empty;
+            public DateTime StartDate { get; set; }
+            public DateTime EndDate { get; set; }
+            public string PickupLocation { get; set; } = string.Empty;
+            public decimal TotalCost { get; set; }
+            public string CarName { get; set; } = string.Empty;
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)

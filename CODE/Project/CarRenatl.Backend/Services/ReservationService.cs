@@ -56,6 +56,45 @@ namespace CarRental.Backend.Services
             return true;
         }
 
+        public int CreateReservationAndReturnId(
+            int carId,
+            string customerEmail,
+            DateTime startDate,
+            DateTime endDate,
+            string pickupLocation)
+        {
+            var car = _context.Cars.FirstOrDefault(c => c.CarId == carId);
+
+            if (car == null)
+                return 0;
+
+            var customer = GetCustomerByEmail(customerEmail);
+
+            if (customer == null)
+                return 0;
+
+            if (!CheckAvailability(carId, startDate, endDate))
+                return 0;
+
+            decimal totalCost = CalculateCost(carId, startDate, endDate);
+
+            var reservation = new Reservation
+            {
+                CarId = carId,
+                CustomerId = customer.CustomerId,
+                StartDate = startDate,
+                EndDate = endDate,
+                PickupLocation = pickupLocation,
+                TotalCost = totalCost,
+                Status = ReservationStatus.Pending
+            };
+
+            _context.Reservations.Add(reservation);
+            _context.SaveChanges();
+
+            return reservation.ReservationId;
+        }
+
         public List<Reservation> GetCustomerReservations(string customerEmail)
         {
             var customer = _context.Customers.FirstOrDefault(c => c.Email == customerEmail);
@@ -137,6 +176,7 @@ namespace CarRental.Backend.Services
         {
             return _context.Reservations
                 .Include(r => r.Car)
+                .Include(r => r.Customer)
                 .FirstOrDefault(r => r.ReservationId == reservationId);
         }
 
@@ -175,6 +215,64 @@ namespace CarRental.Backend.Services
                    startDate.Hour <= 20 &&
                    endDate.Hour >= 8 &&
                    endDate.Hour <= 20;
+        }
+
+
+        public void MarkAsPickedUp(int reservationId)
+        {
+            var reservation = _context.Reservations
+                .FirstOrDefault(r => r.ReservationId == reservationId);
+
+            if (reservation == null)
+                return;
+
+            if (reservation.Status != ReservationStatus.Confirmed)
+                return;
+
+            reservation.Status = ReservationStatus.PickedUp;
+            reservation.PickedUpAt = DateTime.Now;
+
+            _context.SaveChanges();
+        }
+
+        public void MarkAsReturned(int reservationId)
+        {
+            var reservation = _context.Reservations
+                .FirstOrDefault(r => r.ReservationId == reservationId);
+
+            if (reservation == null)
+                return;
+
+            if (reservation.Status != ReservationStatus.PickedUp)
+                return;
+
+            reservation.Status = ReservationStatus.Returned;
+            reservation.ReturnedAt = DateTime.Now;
+
+            if (reservation.ReturnedAt > reservation.EndDate)
+            {
+                double lateHours =
+                    Math.Ceiling((reservation.ReturnedAt.Value - reservation.EndDate).TotalHours);
+
+                reservation.LateFee = (decimal)lateHours * 10m;
+            }
+
+            _context.SaveChanges();
+        }
+
+        public void CompleteReservation(int reservationId)
+        {
+            var reservation = _context.Reservations
+                .FirstOrDefault(r => r.ReservationId == reservationId);
+
+            if (reservation == null)
+                return;
+
+            if (reservation.Status != ReservationStatus.Returned)
+                return;
+
+            reservation.Status = ReservationStatus.Completed;
+            _context.SaveChanges();
         }
 
         public decimal CalculateCost(int carId, DateTime startDate, DateTime endDate)
@@ -249,8 +347,7 @@ namespace CarRental.Backend.Services
             return _context.Reservations
                 .Include(r => r.Car)
                 .Where(r => r.Car.UserId == ownerUserId &&
-                           (r.Status == ReservationStatus.Confirmed ||
-                            r.Status == ReservationStatus.Completed))
+                           (r.Status == ReservationStatus.Completed))
                 .Sum(r => r.TotalCost * (1 - COMPANY_FEE_PERCENT));
         }
 
@@ -261,8 +358,7 @@ namespace CarRental.Backend.Services
             return _context.Reservations
                 .Include(r => r.Car)
                 .Where(r => r.Car.UserId == ownerUserId &&
-                           (r.Status == ReservationStatus.Confirmed ||
-                            r.Status == ReservationStatus.Completed) &&
+                           (r.Status == ReservationStatus.Completed) &&
                            r.StartDate.Month == now.Month &&
                            r.StartDate.Year == now.Year)
                 .Sum(r => r.TotalCost * (1 - COMPANY_FEE_PERCENT));
@@ -282,8 +378,7 @@ namespace CarRental.Backend.Services
             return _context.Reservations
                 .Include(r => r.Car)
                 .Count(r => r.Car.UserId == ownerUserId &&
-                           (r.Status == ReservationStatus.Confirmed ||
-                            r.Status == ReservationStatus.Completed));
+                           (r.Status == ReservationStatus.Completed));
         }
 
         public List<Reservation> GetOwnerRecentEarnings(int ownerUserId, int count = 5)
@@ -291,8 +386,7 @@ namespace CarRental.Backend.Services
             return _context.Reservations
                 .Include(r => r.Car)
                 .Where(r => r.Car.UserId == ownerUserId &&
-                           (r.Status == ReservationStatus.Confirmed ||
-                            r.Status == ReservationStatus.Completed))
+                           (r.Status == ReservationStatus.Completed))
                 .OrderByDescending(r => r.StartDate)
                 .Take(count)
                 .ToList();
@@ -303,8 +397,7 @@ namespace CarRental.Backend.Services
             return _context.Reservations
                 .Include(r => r.Car)
                 .Where(r => r.Car.UserId == ownerUserId &&
-                           (r.Status == ReservationStatus.Confirmed ||
-                            r.Status == ReservationStatus.Completed))
+                           (r.Status == ReservationStatus.Completed))
                 .GroupBy(r => r.Car)
                 .OrderByDescending(g => g.Sum(r => r.TotalCost))
                 .Select(g => g.Key)
@@ -315,8 +408,7 @@ namespace CarRental.Backend.Services
         {
             return _context.Reservations
                 .Where(r => r.CarId == carId &&
-                           (r.Status == ReservationStatus.Confirmed ||
-                            r.Status == ReservationStatus.Completed))
+                           (r.Status == ReservationStatus.Completed))
                 .Sum(r => r.TotalCost * (1 - COMPANY_FEE_PERCENT));
         }
 
@@ -326,11 +418,10 @@ namespace CarRental.Backend.Services
                 .Include(r => r.Car)
                 .Where(r =>
                     r.Car.UserId == ownerUserId &&
-                    (r.Status == ReservationStatus.Confirmed ||
-                     r.Status == ReservationStatus.Completed) &&
+                    r.Status == ReservationStatus.Completed &&
                     r.StartDate.Month == month &&
                     r.StartDate.Year == year)
-                .Sum(r => r.TotalCost);
+                .Sum(r => r.TotalCost * (1 - COMPANY_FEE_PERCENT));
         }
     }
 }

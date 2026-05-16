@@ -24,12 +24,15 @@
     <None Remove="Views\Dashboard\CarRenter\CarRenterDashboardPage.xaml" />
     <None Remove="Views\Dashboard\CarRenter\EarningsPage.xaml" />
     <None Remove="Views\Dashboard\CarRenter\MyCarsPage.xaml" />
+    <None Remove="Views\Dashboard\CarRenter\OwnerReservationDetailsPage.xaml" />
     <None Remove="Views\Dashboard\CarRenter\RenterOverviewPage.xaml" />
     <None Remove="Views\Dashboard\CarRenter\VehicleMonitoringPage.xaml" />
     <None Remove="Views\Dashboard\CarsDetailsPage.xaml" />
     <None Remove="Views\Dashboard\CarsPage.xaml" />
     <None Remove="Views\Dashboard\Customer\NewReservationPage.xaml" />
+    <None Remove="Views\Dashboard\Customer\PaymentPage.xaml" />
     <None Remove="Views\Dashboard\Customer\ReservationDetailsPage.xaml" />
+    <None Remove="Views\Dashboard\Customer\SupportTicketPage.xaml" />
     <None Remove="Views\Dashboard\Settings.xaml" />
     <None Remove="Views\Dashboard\SupportPage.xaml" />
   </ItemGroup>
@@ -92,6 +95,21 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CarRenatl.Backend\CarRental.Backend.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\CarRenter\OwnerReservationDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Customer\SupportTicketPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Customer\PaymentPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Dashboard\Customer\ReservationDetailsPage.xaml">

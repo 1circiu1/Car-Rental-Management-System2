@@ -274,53 +274,14 @@ namespace Project.Views.Dashboard.CarRenter
             };
         }
 
-        private async void Details_Click(object sender, RoutedEventArgs e)
+        private void Details_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not Button button)
                 return;
 
             int reservationId = (int)button.Tag;
 
-            var reservation = _reservations
-                .FirstOrDefault(r => r.ReservationId == reservationId);
-
-            if (reservation == null)
-                return;
-
-            string customerName = reservation.Customer == null
-                ? "Unknown customer"
-                : $"{reservation.Customer.FirstName} {reservation.Customer.LastName}";
-
-            var content = new StackPanel
-            {
-                Spacing = 12
-            };
-
-            content.Children.Add(new TextBlock
-            {
-                Text = "Customer Information",
-                FontSize = 18,
-                FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
-            });
-
-            content.Children.Add(new TextBlock { Text = $"Name: {customerName}" });
-            content.Children.Add(new TextBlock { Text = $"Email: {reservation.Customer?.Email ?? "-"}" });
-            content.Children.Add(new TextBlock { Text = $"Phone: {reservation.Customer?.Phone ?? "-"}" });
-            content.Children.Add(new TextBlock { Text = $"Requested Vehicle: {reservation.Car.Brand} {reservation.Car.Model}" });
-            content.Children.Add(new TextBlock { Text = $"Rental Period: {reservation.StartDate:dd MMM yyyy, HH:mm} - {reservation.EndDate:dd MMM yyyy, HH:mm}" });
-            content.Children.Add(new TextBlock { Text = $"Estimated Total: € {reservation.TotalCost:0.00}" });
-            content.Children.Add(new TextBlock { Text = $"Pickup Location: {reservation.PickupLocation}" });
-            content.Children.Add(new TextBlock { Text = $"Status: {reservation.Status}" });
-
-            var dialog = new ContentDialog
-            {
-                Title = "Rental Request Details",
-                Content = content,
-                CloseButtonText = "Close",
-                XamlRoot = this.XamlRoot
-            };
-
-            await dialog.ShowAsync();
+            Frame.Navigate(typeof(OwnerReservationDetailsPage), reservationId);
         }
 
         private void Approve_Click(object sender, RoutedEventArgs e)

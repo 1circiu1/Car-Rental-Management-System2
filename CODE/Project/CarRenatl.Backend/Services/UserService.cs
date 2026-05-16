@@ -13,6 +13,11 @@ namespace CarRental.Backend.Services
             _context = new AppDbContext();
         }
 
+        public UserService(AppDbContext context)
+        {
+            _context = context;
+        }
+
         public User Login(string email, string password, string role)
         {
             return _context.Users
@@ -56,6 +61,75 @@ namespace CarRental.Backend.Services
             _context.SaveChanges();
 
             return user;
+        }
+
+        public bool UpdateProfile(
+    int userId,
+    string firstName,
+    string lastName,
+    string email,
+    string phone)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
+
+            if (user == null)
+                return false;
+
+            string oldEmail = user.Email;
+
+            user.FirstName = firstName;
+            user.LastName = lastName;
+            user.Email = email;
+
+            if (user.Role == "Customer")
+            {
+                var customer = _context.Customers.FirstOrDefault(c => c.Email == oldEmail);
+
+                if (customer != null)
+                {
+                    customer.FirstName = firstName;
+                    customer.LastName = lastName;
+                    customer.Email = email;
+                    customer.Phone = phone;
+                }
+            }
+
+            if (user.Role == "CarRenter")
+            {
+                var carRenter = _context.CarRenters.FirstOrDefault(c => c.Email == oldEmail);
+
+                if (carRenter != null)
+                {
+                    carRenter.FirstName = firstName;
+                    carRenter.LastName = lastName;
+                    carRenter.Email = email;
+                    carRenter.Phone = phone;
+                }
+            }
+
+            _context.SaveChanges();
+
+            return true;
+        }
+
+        public bool ChangePassword(
+            int userId,
+            string currentPassword,
+            string newPassword)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
+
+            if (user == null)
+                return false;
+
+            if (user.Password != currentPassword)
+                return false;
+
+            user.Password = newPassword;
+
+            _context.SaveChanges();
+
+            return true;
         }
     }
 }

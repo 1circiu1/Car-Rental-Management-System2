@@ -1,31 +1,159 @@
+using CarRental.Backend.Data;
+using CarRental.Backend.Models;
+using CarRental.Backend.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Project.Views.Dashboard
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class ProfilePage : Page
     {
+        private User _currentUser;
+
         public ProfilePage()
         {
             InitializeComponent();
+            LoadProfile();
+        }
+
+        private void LoadProfile()
+        {
+            _currentUser = SessionManager.CurrentUser;
+
+            if (_currentUser == null)
+                return;
+
+            FullNameText.Text = $"{_currentUser.FirstName} {_currentUser.LastName}";
+            RoleText.Text = $"{_currentUser.Role} Account";
+            EmailText.Text = _currentUser.Email;
+
+            FirstNameBox.Text = _currentUser.FirstName;
+            LastNameBox.Text = _currentUser.LastName;
+            EmailBox.Text = _currentUser.Email;
+
+            string initials = "";
+
+            if (!string.IsNullOrWhiteSpace(_currentUser.FirstName))
+                initials += _currentUser.FirstName[0];
+
+            if (!string.IsNullOrWhiteSpace(_currentUser.LastName))
+                initials += _currentUser.LastName[0];
+
+            AvatarInitialsText.Text = initials.ToUpper();
+        }
+
+        private void SaveProfile_Click(object sender, RoutedEventArgs e)
+        {
+            ProfileStatusText.Text = "";
+
+            if (_currentUser == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(FirstNameBox.Text) ||
+                string.IsNullOrWhiteSpace(LastNameBox.Text) ||
+                string.IsNullOrWhiteSpace(EmailBox.Text))
+            {
+                ProfileStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                    Windows.UI.Color.FromArgb(255, 248, 113, 113));
+
+                ProfileStatusText.Text = "Please complete all required fields.";
+                return;
+            }
+
+            using var db = new AppDbContext();
+            var userService = new UserService(db);
+
+            bool success = userService.UpdateProfile(
+                _currentUser.UserId,
+                FirstNameBox.Text.Trim(),
+                LastNameBox.Text.Trim(),
+                EmailBox.Text.Trim(),
+                PhoneBox.Text.Trim());
+
+            if (!success)
+            {
+                ProfileStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                    Windows.UI.Color.FromArgb(255, 248, 113, 113));
+
+                ProfileStatusText.Text = "Profile could not be updated.";
+                return;
+            }
+
+            _currentUser.FirstName = FirstNameBox.Text.Trim();
+            _currentUser.LastName = LastNameBox.Text.Trim();
+            _currentUser.Email = EmailBox.Text.Trim();
+
+            SessionManager.CurrentUser = _currentUser;
+
+            LoadProfile();
+
+            ProfileStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                Windows.UI.Color.FromArgb(255, 52, 211, 153));
+
+            ProfileStatusText.Text = "Profile updated successfully.";
+        }
+
+        private void ChangePassword_Click(object sender, RoutedEventArgs e)
+        {
+            PasswordStatusText.Text = "";
+
+            if (_currentUser == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(CurrentPasswordBox.Password) ||
+                string.IsNullOrWhiteSpace(NewPasswordBox.Password) ||
+                string.IsNullOrWhiteSpace(ConfirmPasswordBox.Password))
+            {
+                PasswordStatusText.Text = "Please complete all password fields.";
+                return;
+            }
+
+            if (NewPasswordBox.Password != ConfirmPasswordBox.Password)
+            {
+                PasswordStatusText.Text = "New passwords do not match.";
+                return;
+            }
+
+            using var db = new AppDbContext();
+            var userService = new UserService(db);
+
+            bool success = userService.ChangePassword(
+                _currentUser.UserId,
+                CurrentPasswordBox.Password,
+                NewPasswordBox.Password);
+
+            if (!success)
+            {
+                PasswordStatusText.Text = "Current password is incorrect.";
+                return;
+            }
+
+            CurrentPasswordBox.Password = "";
+            NewPasswordBox.Password = "";
+            ConfirmPasswordBox.Password = "";
+
+            PasswordStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                Windows.UI.Color.FromArgb(255, 52, 211, 153));
+
+            PasswordStatusText.Text = "Password changed successfully.";
+        }
+
+        private void UpdateLicense_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(LicenseNumberBox.Text) ||
+                string.IsNullOrWhiteSpace(LicenseExpiryBox.Text))
+            {
+                LicenseStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                    Windows.UI.Color.FromArgb(255, 248, 113, 113));
+
+                LicenseStatusText.Text = "Please complete license number and expiry date.";
+                return;
+            }
+
+            LicenseStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                Windows.UI.Color.FromArgb(255, 52, 211, 153));
+
+            LicenseStatusText.Text = "Driving license information updated.";
         }
     }
 }

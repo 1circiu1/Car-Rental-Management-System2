@@ -61,6 +61,8 @@ namespace Project.Views.Dashboard.Customer
             }
 
             TotalPriceText.Text = $"€ {_reservation.TotalCost:0.00}";
+            LoadPaymentDetails();
+            LoadRentalProgress();
 
             if (_reservation.Status == ReservationStatus.Cancelled ||
                 _reservation.Status == ReservationStatus.Completed)
@@ -69,6 +71,122 @@ namespace Project.Views.Dashboard.Customer
             }
 
             UpdateStatusBadge();
+        }
+
+
+        private void LoadRentalProgress()
+        {
+            ProgressActionButton.Visibility = Visibility.Visible;
+            ProgressActionButton.IsEnabled = true;
+
+            if (_reservation.Status == ReservationStatus.Pending)
+            {
+                RentalProgressText.Text = "Your reservation is waiting for owner approval.";
+                ProgressActionButton.Visibility = Visibility.Collapsed;
+            }
+            else if (_reservation.Status == ReservationStatus.Confirmed)
+            {
+                DateTime allowedPickupTime = _reservation.StartDate.AddMinutes(-15);
+
+                RentalProgressText.Text =
+                    $"Your reservation is confirmed. Pick-up is available starting from {allowedPickupTime:dd MMM yyyy, HH:mm}.";
+
+                ProgressActionButton.Content = "Car picked up";
+
+                ProgressActionButton.IsEnabled = DateTime.Now >= allowedPickupTime;
+            }
+            else if (_reservation.Status == ReservationStatus.PickedUp)
+            {
+                RentalProgressText.Text = "You currently have the car. Mark it as returned when you bring it back to the DriveEase garage.";
+                ProgressActionButton.Content = "Returned to garage";
+            }
+            else if (_reservation.Status == ReservationStatus.Returned)
+            {
+                RentalProgressText.Text = "The car was returned to the garage. Waiting for owner confirmation.";
+                ProgressActionButton.Visibility = Visibility.Collapsed;
+            }
+            else if (_reservation.Status == ReservationStatus.Completed)
+            {
+                RentalProgressText.Text = "This rental is completed.";
+                ProgressActionButton.Visibility = Visibility.Collapsed;
+            }
+            else if (_reservation.Status == ReservationStatus.Cancelled)
+            {
+                RentalProgressText.Text = "This reservation was cancelled.";
+                ProgressActionButton.Visibility = Visibility.Collapsed;
+            }
+        }
+
+
+        private void ProgressAction_Click(object sender, RoutedEventArgs e)
+        {
+            if (_reservation == null)
+                return;
+
+            using var db = new AppDbContext();
+            var reservationService = new ReservationService(db);
+
+            if (_reservation.Status == ReservationStatus.Confirmed)
+            {
+                reservationService.MarkAsPickedUp(_reservation.ReservationId);
+            }
+            else if (_reservation.Status == ReservationStatus.PickedUp)
+            {
+                if (DateTime.Now > _reservation.EndDate)
+                {
+                    double lateHours = Math.Ceiling((DateTime.Now - _reservation.EndDate).TotalHours);
+                    decimal lateFee = (decimal)lateHours * 10m;
+
+                    // momentan doar marcăm ca returned; late fee îl putem salva separat după
+                }
+
+                reservationService.MarkAsReturned(_reservation.ReservationId);
+            }
+
+            _reservation = reservationService.GetReservationById(_reservation.ReservationId);
+
+            if (_reservation == null)
+                return;
+
+            LoadReservationDetails();
+        }
+
+        private void LoadPaymentDetails()
+        {
+            using var db = new AppDbContext();
+
+            var paymentService = new PaymentService(db);
+
+            var payment = paymentService.GetPaymentByReservationId(_reservation.ReservationId);
+
+            if (payment == null)
+            {
+                PaymentMethodText.Text = "Payment not found";
+                PaymentStatusText.Text = "No payment information is available for this reservation.";
+                return;
+            }
+
+            PaymentMethodText.Text = $"Method: {payment.MethodOfPayment}";
+
+            if (payment.MethodOfPayment == "Cash")
+            {
+                PaymentStatusText.Text = "Payment will be made in cash at vehicle pick-up.";
+            }
+            else
+            {
+                PaymentStatusText.Text = $"Paid by card on {payment.PaymentDate:dd MMM yyyy, HH:mm}.";
+            }
+
+            if (_reservation.LateFee > 0)
+            {
+                LateFeeText.Visibility = Visibility.Visible;
+                LateFeeText.Text =
+                    $"Late return fee: € {_reservation.LateFee:0.00}";
+            }
+            else
+            {
+                LateFeeText.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void UpdateStatusBadge()
@@ -80,6 +198,14 @@ namespace Project.Views.Dashboard.Customer
             else if (_reservation.Status == ReservationStatus.Confirmed)
             {
                 StatusBadge.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 34, 197, 94));
+            }
+            else if (_reservation.Status == ReservationStatus.PickedUp)
+            {
+                StatusBadge.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 59, 130, 246));
+            }
+            else if (_reservation.Status == ReservationStatus.Returned)
+            {
+                StatusBadge.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 245, 158, 11));
             }
             else if (_reservation.Status == ReservationStatus.Cancelled)
             {

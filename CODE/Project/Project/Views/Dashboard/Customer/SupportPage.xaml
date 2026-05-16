@@ -205,71 +205,16 @@
                 </StackPanel>
             </Border>
 
-            <!-- Main section -->
             <Grid ColumnSpacing="22">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.1*"/>
-                    <ColumnDefinition Width="0.9*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Contact form -->
-                <Border Grid.Column="0"
-                        Padding="24"
-                        CornerRadius="22"
-                        Background="#26263A"
-                        BorderBrush="#3B3B5C"
-                        BorderThickness="1">
+                <!-- LEFT SIDE -->
+                <StackPanel Grid.Column="0" Spacing="22">
 
-                    <StackPanel Spacing="14">
-                        <TextBlock Text="Contact support"
-                                   FontSize="24"
-                                   FontWeight="SemiBold"
-                                   Foreground="White"/>
-
-                        <TextBlock x:Name="SelectedCategoryText"
-                                   Text="Selected category: Other"
-                                   Foreground="#A78BFA"
-                                   FontSize="13"/>
-
-                        <TextBox x:Name="SubjectTextBox"
-                                 Header="Subject"
-                                 PlaceholderText="Example: Problem with my reservation"/>
-
-                        <TextBox x:Name="MessageTextBox"
-                                 Header="Message"
-                                 PlaceholderText="Describe your problem..."
-                                 AcceptsReturn="True"
-                                 Height="130"/>
-
-                        <Button x:Name="AttachButton"
-                                Content="Attach image or screenshot"
-                                HorizontalAlignment="Left"
-                                Click="AttachButton_Click"/>
-
-                        <TextBlock x:Name="AttachedFileText"
-                                   Text="No file attached"
-                                   Foreground="#9CA3AF"
-                                   FontSize="12"/>
-
-                        <TextBlock x:Name="StatusText"
-                                   Text=""
-                                   Foreground="#34D399"
-                                   FontSize="13"
-                                   TextWrapping="Wrap"/>
-
-                        <Button Content="Submit ticket"
-                                HorizontalAlignment="Stretch"
-                                Height="46"
-                                Background="#8B5CF6"
-                                Foreground="White"
-                                Click="SubmitTicket_Click"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Right column -->
-                <StackPanel Grid.Column="1" Spacing="22">
-
-                    <!-- Emergency card -->
+                    <!-- Emergency -->
                     <Border Padding="24"
                             CornerRadius="22"
                             BorderBrush="#FCA5A5"
@@ -284,16 +229,19 @@
 
                         <StackPanel Spacing="10">
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <FontIcon Glyph="&#xE717;" FontSize="24" Foreground="White"/>
+                                <FontIcon Glyph="&#xE717;"
+                                          FontSize="24"
+                                          Foreground="White"/>
+
                                 <TextBlock Text="Emergency roadside assistance"
-                                           FontSize="22"
+                                           FontSize="20"
                                            FontWeight="SemiBold"
                                            Foreground="White"/>
                             </StackPanel>
 
                             <TextBlock Text="Call +40 741 222 111"
                                        Foreground="White"
-                                       FontSize="20"
+                                       FontSize="18"
                                        FontWeight="SemiBold"/>
 
                             <TextBlock Text="Available 24/7 for accidents, vehicle breakdowns, and urgent roadside problems."
@@ -301,6 +249,53 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                     </Border>
+
+                    <!-- Required information -->
+                    <Border Padding="24"
+                            CornerRadius="22"
+                            Background="#1E293B"
+                            BorderBrush="#3B3B5C"
+                            BorderThickness="1">
+
+                        <StackPanel Spacing="14">
+
+                            <TextBlock Text="Required information before submitting a ticket"
+                                       FontSize="22"
+                                       FontWeight="SemiBold"
+                                       Foreground="White"
+                                       TextWrapping="Wrap"/>
+
+                            <TextBlock Text="Faster support checklist"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="#A78BFA"/>
+
+                            <StackPanel Spacing="8">
+
+                                <TextBlock Text="• Reservation ID"
+                           Foreground="#D1D5DB"/>
+
+                                <TextBlock Text="• Vehicle model"
+                           Foreground="#D1D5DB"/>
+
+                                <TextBlock Text="• Pick-up city"
+                           Foreground="#D1D5DB"/>
+
+                                <TextBlock Text="• Screenshots / photos"
+                           Foreground="#D1D5DB"/>
+
+                                <TextBlock Text="• Payment proof (if applicable)"
+                           Foreground="#D1D5DB"/>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+
+                <!-- RIGHT SIDE -->
+                <StackPanel Grid.Column="1" Spacing="22">
+
 
                     <!-- FAQ -->
                     <Border Padding="24"
@@ -311,32 +306,38 @@
 
                         <StackPanel Spacing="12">
                             <TextBlock Text="Frequently asked questions"
-                                       FontSize="22"
-                                       FontWeight="SemiBold"
-                                       Foreground="White"/>
+                           FontSize="22"
+                           FontWeight="SemiBold"
+                           Foreground="White"/>
 
                             <Expander Header="How do I cancel a reservation?">
                                 <TextBlock Text="Go to Reservations, select your booking, then choose Cancel reservation."
-                                           TextWrapping="Wrap"
-                                           Foreground="#D1D5DB"/>
+                               TextWrapping="Wrap"
+                               Foreground="#D1D5DB"/>
                             </Expander>
 
                             <Expander Header="What happens if I return late?">
                                 <TextBlock Text="Late returns may affect the next booking. Please contact support if you cannot return on time."
-                                           TextWrapping="Wrap"
-                                           Foreground="#D1D5DB"/>
+                               TextWrapping="Wrap"
+                               Foreground="#D1D5DB"/>
+                            </Expander>
+
+                            <Expander Header="What should I do if the car is damaged?">
+                                <TextBlock Text="Take photos immediately, avoid driving if the vehicle is unsafe, and open a support ticket under Vehicle damage."
+                               TextWrapping="Wrap"
+                               Foreground="#D1D5DB"/>
                             </Expander>
 
                             <Expander Header="Can I extend my booking?">
                                 <TextBlock Text="You can request an extension through support, depending on vehicle availability."
-                                           TextWrapping="Wrap"
-                                           Foreground="#D1D5DB"/>
+                               TextWrapping="Wrap"
+                               Foreground="#D1D5DB"/>
                             </Expander>
 
                             <Expander Header="How do refunds work?">
                                 <TextBlock Text="Refunds depend on the reservation status and cancellation time."
-                                           TextWrapping="Wrap"
-                                           Foreground="#D1D5DB"/>
+                               TextWrapping="Wrap"
+                               Foreground="#D1D5DB"/>
                             </Expander>
                         </StackPanel>
                     </Border>

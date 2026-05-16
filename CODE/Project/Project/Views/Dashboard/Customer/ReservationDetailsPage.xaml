@@ -162,6 +162,61 @@
                             </Border>
                         </Grid>
 
+                        <Border Padding="20"
+                                CornerRadius="18"
+                                Background="#111827"
+                                BorderBrush="#3B3B5C"
+                                BorderThickness="1">
+
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Payment"
+                                           Foreground="#A78BFA"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"/>
+
+                                <TextBlock x:Name="PaymentMethodText"
+                                           Foreground="White"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"/>
+
+                                <TextBlock x:Name="PaymentStatusText"
+                                           Foreground="#D1D5DB"
+                                           FontSize="14"
+                                           TextWrapping="Wrap"/>
+                                <TextBlock x:Name="LateFeeText"
+                                           Foreground="#F59E0B"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"
+                                           Visibility="Collapsed"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Padding="20"
+                        CornerRadius="18"
+                        Background="#1E293B"
+                        BorderBrush="#334155"
+                        BorderThickness="1">
+
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="Rental progress"
+                                           Foreground="#A78BFA"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"/>
+
+                                <TextBlock x:Name="RentalProgressText"
+                                           Foreground="White"
+                                           FontSize="16"
+                                           TextWrapping="Wrap"/>
+
+                                <Button x:Name="ProgressActionButton"
+                                        Height="44"
+                                        HorizontalAlignment="Stretch"
+                                        Background="#8B5CF6"
+                                        Foreground="White"
+                                        Click="ProgressAction_Click"/>
+                            </StackPanel>
+                        </Border>
+
                         <Button x:Name="CancelButton"
                             Content="Cancel reservation"
                             Height="46"
