@@ -49,6 +49,14 @@ namespace Project.Views.Dashboard
                 .ToString();
         }
 
+        private void RecentTicketsList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem is not SupportTicket ticket)
+                return;
+
+            Frame.Navigate(typeof(Customer.SupportTicketDetailsPage), ticket.Id);
+        }
+
         private void LoadRecentTickets()
         {
             if (SessionManager.CurrentUser == null)

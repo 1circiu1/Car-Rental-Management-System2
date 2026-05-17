@@ -359,8 +359,10 @@
                                Foreground="White"/>
 
                     <ListView x:Name="RecentTicketsList"
-                              SelectionMode="None"
-                              Background="Transparent">
+                              SelectionMode="Single"
+                              Background="Transparent"
+                              ItemClick="RecentTicketsList_ItemClick"
+                              IsItemClickEnabled="True">
 
                         <ListView.ItemTemplate>
                             <DataTemplate>

@@ -26,7 +26,7 @@ namespace CarRental.Backend.Services
                 Subject = subject,
                 Category = category,
                 Message = message,
-                Status = "Open",
+                Status = "Pending",
                 CreatedAt = DateTime.Now
             };
 
@@ -55,6 +55,43 @@ namespace CarRental.Backend.Services
         {
             return _context.SupportTickets
                 .Count(t => t.UserId == userId && t.Status == "Open");
+        }
+
+        public List<SupportTicket> GetAllTickets()
+        {
+            return _context.SupportTickets
+                .OrderByDescending(t => t.CreatedAt)
+                .ToList();
+        }
+
+        public void UpdateTicketStatus(int ticketId, string status)
+        {
+            var ticket = _context.SupportTickets
+                .FirstOrDefault(t => t.Id == ticketId);
+
+            if (ticket == null)
+                return;
+
+            ticket.Status = status;
+            _context.SaveChanges();
+        }
+
+        public void ResolveTicketWithResponse(int ticketId, string adminResponse)
+        {
+            var ticket = _context.SupportTickets
+                .FirstOrDefault(t => t.Id == ticketId);
+
+            if (ticket == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(adminResponse))
+                return;
+
+            ticket.AdminResponse = adminResponse;
+            ticket.Status = "Resolved";
+            ticket.ResolvedAt = DateTime.Now;
+
+            _context.SaveChanges();
         }
     }
 }

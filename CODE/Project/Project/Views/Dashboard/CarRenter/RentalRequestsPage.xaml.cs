@@ -96,6 +96,7 @@ namespace Project.Views.Dashboard.CarRenter
 
         private Border CreateRequestCard(Reservation reservation)
         {
+
             string customerName = reservation.Customer == null
                 ? "Unknown customer"
                 : $"{reservation.Customer.FirstName} {reservation.Customer.LastName}";
@@ -180,10 +181,19 @@ namespace Project.Views.Dashboard.CarRenter
                 FontSize = 13,
                 Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"]
             });
+            infoPanel.Children.Add(CreateProgressTimeline(reservation.Status));
+
+            decimal displayedTotal = reservation.TotalCost;
+
+            if (reservation.Status == ReservationStatus.Returned ||
+                reservation.Status == ReservationStatus.Completed)
+            {
+                displayedTotal += reservation.LateFee;
+            }
 
             infoPanel.Children.Add(new TextBlock
             {
-                Text = $"Estimated total: € {reservation.TotalCost:0.00}",
+                Text = $"Estimated total: € {displayedTotal:0.00}",
                 FontSize = 14,
                 FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
             });
@@ -237,6 +247,49 @@ namespace Project.Views.Dashboard.CarRenter
             return card;
         }
 
+        private StackPanel CreateProgressTimeline(ReservationStatus status)
+        {
+
+            if (status == ReservationStatus.Cancelled)
+            {
+                return new StackPanel();
+            }
+            var panel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 6,
+                Margin = new Thickness(0, 6, 0, 0)
+            };
+
+            var steps = new List<ReservationStatus>
+            {
+                ReservationStatus.Pending,
+                ReservationStatus.Confirmed,
+                ReservationStatus.PickedUp,
+                ReservationStatus.Returned,
+                ReservationStatus.Completed
+            };
+
+            int currentIndex = steps.IndexOf(status);
+
+            foreach (var step in steps)
+            {
+                bool isDone = currentIndex >= steps.IndexOf(step);
+
+                panel.Children.Add(new Border
+                {
+                    Width = 10,
+                    Height = 10,
+                    CornerRadius = new CornerRadius(5),
+                    Background = isDone
+                        ? GetStatusForeground(step)
+                        : new SolidColorBrush(Windows.UI.Color.FromArgb(255, 71, 85, 105))
+                });
+            }
+
+            return panel;
+        }
+
         private string GetInitials(string name)
         {
             var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -254,11 +307,13 @@ namespace Project.Views.Dashboard.CarRenter
         {
             return status switch
             {
-                ReservationStatus.Pending => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 255, 149, 0)),
-                ReservationStatus.Confirmed => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 52, 199, 89)),
-                ReservationStatus.Cancelled => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 255, 59, 48)),
-                ReservationStatus.Completed => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 120, 120, 120)),
-                _ => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 120, 120, 120))
+                ReservationStatus.Pending => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 245, 158, 11)),
+                ReservationStatus.Confirmed => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 59, 130, 246)),
+                ReservationStatus.PickedUp => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 139, 92, 246)),
+                ReservationStatus.Returned => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 6, 182, 212)),
+                ReservationStatus.Completed => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 34, 197, 94)),
+                ReservationStatus.Cancelled => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 239, 68, 68)),
+                _ => new SolidColorBrush(Windows.UI.Color.FromArgb(34, 100, 116, 139))
             };
         }
 
@@ -266,11 +321,13 @@ namespace Project.Views.Dashboard.CarRenter
         {
             return status switch
             {
-                ReservationStatus.Pending => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 149, 0)),
-                ReservationStatus.Confirmed => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 52, 199, 89)),
-                ReservationStatus.Cancelled => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 59, 48)),
-                ReservationStatus.Completed => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 120, 120, 120)),
-                _ => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 120, 120, 120))
+                ReservationStatus.Pending => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 245, 158, 11)),
+                ReservationStatus.Confirmed => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 59, 130, 246)),
+                ReservationStatus.PickedUp => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 139, 92, 246)),
+                ReservationStatus.Returned => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 6, 182, 212)),
+                ReservationStatus.Completed => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 34, 197, 94)),
+                ReservationStatus.Cancelled => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 239, 68, 68)),
+                _ => new SolidColorBrush(Windows.UI.Color.FromArgb(255, 100, 116, 139))
             };
         }
 

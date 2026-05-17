@@ -102,7 +102,7 @@ namespace Project.Views.Dashboard.Customer
             }
             else if (_reservation.Status == ReservationStatus.Returned)
             {
-                RentalProgressText.Text = "The car was returned to the garage. Waiting for owner confirmation.";
+                RentalProgressText.Text = "The car was returned to the garage. Waiting for DriveEase garage confirmation.";
                 ProgressActionButton.Visibility = Visibility.Collapsed;
             }
             else if (_reservation.Status == ReservationStatus.Completed)
@@ -136,8 +136,6 @@ namespace Project.Views.Dashboard.Customer
                 {
                     double lateHours = Math.Ceiling((DateTime.Now - _reservation.EndDate).TotalHours);
                     decimal lateFee = (decimal)lateHours * 10m;
-
-                    // momentan doar marcăm ca returned; late fee îl putem salva separat după
                 }
 
                 reservationService.MarkAsReturned(_reservation.ReservationId);

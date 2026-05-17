@@ -423,5 +423,17 @@ namespace CarRental.Backend.Services
                     r.StartDate.Year == year)
                 .Sum(r => r.TotalCost * (1 - COMPANY_FEE_PERCENT));
         }
+
+
+        // OWNER 
+        public List<Reservation> GetReturnedReservations()
+        {
+            return _context.Reservations
+                .Include(r => r.Car)
+                .Include(r => r.Customer)
+                .Where(r => r.Status == ReservationStatus.Returned)
+                .OrderByDescending(r => r.ReturnedAt)
+                .ToList();
+        }
     }
 }

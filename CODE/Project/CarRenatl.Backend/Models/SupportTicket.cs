@@ -16,8 +16,10 @@ namespace CarRental.Backend.Models
         public string Subject { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
+        public string Status { get; set; } = "Pending";
 
-        public string Status { get; set; } = "Open";
+        public string AdminResponse { get; set; } = "";
+        public DateTime? ResolvedAt { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }

@@ -28,11 +28,12 @@ namespace Project.Views.Dashboard.CarRenter
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is int ownerUserId)
-            {
-                _ownerUserId = ownerUserId;
-                LoadEarnings();
-            }
+            if (SessionManager.CurrentUser == null)
+                return;
+
+            _ownerUserId = SessionManager.CurrentUser.UserId;
+
+            LoadEarnings();
         }
 
         private void LoadEarnings()

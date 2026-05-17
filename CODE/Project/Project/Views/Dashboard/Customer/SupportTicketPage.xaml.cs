@@ -99,6 +99,7 @@ namespace Project.Views.Dashboard.Customer
             AttachedFileText.Text = "No file attached";
         }
 
+
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             Frame.GoBack();

@@ -21,6 +21,12 @@
     <None Remove="Assets\Cars\volkswagen_golf7_2018.png" />
     <None Remove="NavButtonStyles.xaml" />
     <None Remove="Views\AdminDashboardPage.xaml" />
+    <None Remove="Views\Dashboard\Admin\AdminCompanyRevenuePage.xaml" />
+    <None Remove="Views\Dashboard\Admin\AdminGaragesPage.xaml" />
+    <None Remove="Views\Dashboard\Admin\AdminOverviewPage.xaml" />
+    <None Remove="Views\Dashboard\Admin\AdminReturnedReservationsPage.xaml" />
+    <None Remove="Views\Dashboard\Admin\AdminSupportTicketDetailsPage.xaml" />
+    <None Remove="Views\Dashboard\Admin\AdminSupportTicketsPage.xaml" />
     <None Remove="Views\Dashboard\CarRenter\CarRenterDashboardPage.xaml" />
     <None Remove="Views\Dashboard\CarRenter\EarningsPage.xaml" />
     <None Remove="Views\Dashboard\CarRenter\MyCarsPage.xaml" />
@@ -33,6 +39,7 @@
     <None Remove="Views\Dashboard\Customer\PaymentPage.xaml" />
     <None Remove="Views\Dashboard\Customer\ReservationDetailsPage.xaml" />
     <None Remove="Views\Dashboard\Customer\SupportTicketPage.xaml" />
+    <None Remove="Views\Dashboard\Customer\SuppotTicketDetailsPage.xaml" />
     <None Remove="Views\Dashboard\Settings.xaml" />
     <None Remove="Views\Dashboard\SupportPage.xaml" />
   </ItemGroup>
@@ -90,11 +97,45 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Views\Dashboard\Admin\" />
     <Folder Include="Views\Auth\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CarRenatl.Backend\CarRental.Backend.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Admin\AdminSupportTicketDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Customer\SuppotTicketDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Admin\AdminSupportTicketsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Admin\AdminGaragesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Admin\AdminCompanyRevenuePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Admin\AdminReturnedReservationsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Admin\AdminOverviewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Dashboard\CarRenter\OwnerReservationDetailsPage.xaml">
