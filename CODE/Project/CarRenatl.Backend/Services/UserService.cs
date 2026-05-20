@@ -30,6 +30,13 @@ namespace CarRental.Backend.Services
 
         public User Register(User user, string phone)
         {
+            bool emailExists = _context.Users.Any(u => u.Email == user.Email);
+
+            if (emailExists)
+            {
+                throw new Exception("Email already exists.");
+            }
+
             _context.Users.Add(user);
             _context.SaveChanges();
 

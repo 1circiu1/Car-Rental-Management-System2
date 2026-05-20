@@ -90,7 +90,23 @@
                 <TextBlock Text="PASSWORD" FontSize="11" FontWeight="Medium"
                            CharacterSpacing="40" Margin="0,0,0,6"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                <PasswordBox x:Name="TxtPassword" PlaceholderText="Min. 8 characters"
+
+                   <PasswordBox x:Name="TxtPassword"
+                             PlaceholderText="Min. 8 characters"
+                             Margin="0,0,0,6"/>
+
+                   <TextBlock Text="Must contain at least 8 characters, one uppercase letter and one number."
+                           FontSize="12"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Margin="0,0,0,16"
+                           TextWrapping="Wrap"/>
+
+                    <TextBlock Text="CONFIRM PASSWORD" FontSize="11" FontWeight="Medium"
+                           CharacterSpacing="40" Margin="0,0,0,6"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                      <PasswordBox x:Name="TxtConfirmPassword"
+                             PlaceholderText="Repeat password"
                              Margin="0,0,0,24"/>
 
                 <!-- Error -->

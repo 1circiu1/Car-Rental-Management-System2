@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Media;
 using Project.Views.Dashboard.Admin;
 using Project.Views.Dashboard.CarRenter;
 using Project.Views.Dashboard.Customer;
+using System.Text.RegularExpressions;
 
 namespace Project.Views.Auth
 {
@@ -46,42 +47,65 @@ namespace Project.Views.Auth
         {
             TxtError.Visibility = Visibility.Collapsed;
 
-            var email = TxtEmail.Text.Trim();
+            var email = TxtEmail.Text.Trim().ToLower();
             var password = TxtPassword.Password;
 
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(email) ||
+                string.IsNullOrWhiteSpace(password))
             {
-                TxtError.Text = "Please fill in all fields.";
-                TxtError.Visibility = Visibility.Visible;
+                ShowError("Please fill in all fields.");
                 return;
             }
 
-            UserService userService = new UserService();
-
-            User user = userService.Login(email, password, _selectedRole);
-
-            if (user == null)
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
-                TxtError.Text = "Invalid email or password.";
-                TxtError.Visibility = Visibility.Visible;
+                ShowError("Please enter a valid email address.");
                 return;
             }
 
-            SessionManager.CurrentUser = user;
+            if (password.Length < 8)
+            {
+                ShowError("Invalid password.");
+                return;
+            }
 
-            if (user.Role == "Admin")
+            try
             {
-                MainWindow.Current.Navigate(typeof(AdminDashboardPage));
+                UserService userService = new UserService();
+
+                User user = userService.Login(email, password, _selectedRole);
+
+                if (user == null)
+                {
+                    ShowError("Invalid email, password, or role.");
+                    return;
+                }
+
+                SessionManager.CurrentUser = user;
+
+                if (user.Role == "Admin")
+                {
+                    MainWindow.Current.Navigate(typeof(AdminDashboardPage));
+                }
+                else if (user.Role == "CarRenter")
+                {
+                    MainWindow.Current.Navigate(typeof(CarRenterDashboardPage));
+                }
+                else
+                {
+                    MainWindow.Current.Navigate(typeof(CustomerDashboardPage));
+                }
             }
-           
-            else if (user.Role == "CarRenter")
+            catch
             {
-                MainWindow.Current.Navigate(typeof(CarRenterDashboardPage));
+                ShowError("Something went wrong while signing in.");
             }
-            else
-            {
-                MainWindow.Current.Navigate(typeof(CustomerDashboardPage));
-            }
+        }
+
+        private void ShowError(string message)
+        {
+            TxtError.Text = message;
+            TxtError.Visibility = Visibility.Visible;
         }
 
         private void GoToSignUp_Click(object sender, RoutedEventArgs e)
