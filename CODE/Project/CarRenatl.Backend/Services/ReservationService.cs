@@ -221,6 +221,7 @@ namespace CarRental.Backend.Services
         public void MarkAsPickedUp(int reservationId)
         {
             var reservation = _context.Reservations
+                .Include(r => r.Car)
                 .FirstOrDefault(r => r.ReservationId == reservationId);
 
             if (reservation == null)
@@ -231,6 +232,17 @@ namespace CarRental.Backend.Services
 
             reservation.Status = ReservationStatus.PickedUp;
             reservation.PickedUpAt = DateTime.Now;
+
+            if (reservation.Car.UserId.HasValue)
+            {
+                var notificationService = new NotificationService(_context);
+
+                notificationService.CreateNotification(
+                    reservation.Car.UserId.Value,
+                    "Vehicle picked up",
+                    $"{reservation.Car.Brand} {reservation.Car.Model} was picked up by the customer.",
+                    "Vehicle");
+            }
 
             _context.SaveChanges();
         }
@@ -248,6 +260,17 @@ namespace CarRental.Backend.Services
 
             reservation.Status = ReservationStatus.Returned;
             reservation.ReturnedAt = DateTime.Now;
+
+            if (reservation.Car.UserId.HasValue)
+            {
+                var notificationService = new NotificationService(_context);
+
+                notificationService.CreateNotification(
+                    reservation.Car.UserId.Value,
+                    "Vehicle returned",
+                    $"{reservation.Car.Brand} {reservation.Car.Model} was returned to the DriveEase garage.",
+                    "Vehicle");
+            }
 
             if (reservation.ReturnedAt > reservation.EndDate)
             {
@@ -272,6 +295,24 @@ namespace CarRental.Backend.Services
                 return;
 
             reservation.Status = ReservationStatus.Completed;
+
+            var notificationService = new NotificationService(_context);
+
+            notificationService.CreateNotification(
+                reservation.Customer.CustomerId,
+                "Rental completed",
+                $"Your rental for {reservation.Car.Brand} {reservation.Car.Model} has been completed.",
+                "Reservation");
+
+            if (reservation.Car.UserId.HasValue)
+            {
+                notificationService.CreateNotification(
+                    reservation.Car.UserId.Value,
+                    "Payout activated",
+                    $"Revenue for {reservation.Car.Brand} {reservation.Car.Model} is now available in your balance.",
+                    "Revenue");
+            }
+
             _context.SaveChanges();
         }
 
@@ -321,12 +362,29 @@ namespace CarRental.Backend.Services
         public void ConfirmReservation(int reservationId)
         {
             var reservation = _context.Reservations
+                .Include(r => r.Car)
+                .Include(r => r.Customer)
                 .FirstOrDefault(r => r.ReservationId == reservationId);
 
             if (reservation == null)
                 return;
 
             reservation.Status = ReservationStatus.Confirmed;
+
+            var customerUser = _context.Users
+                .FirstOrDefault(u => u.Email == reservation.Customer.Email);
+
+            if (customerUser != null)
+            {
+                var notificationService = new NotificationService(_context);
+
+                notificationService.CreateNotification(
+                    customerUser.UserId,
+                    "Reservation approved",
+                    $"Your reservation for {reservation.Car.Brand} {reservation.Car.Model} has been approved.",
+                    "Reservation");
+            }
+
             _context.SaveChanges();
         }
 

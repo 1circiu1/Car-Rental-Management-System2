@@ -118,6 +118,44 @@
                     </StackPanel>
                 </Button>
 
+                <Button x:Name="BtnNotifications"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="Notifications"
+                        Click="NavButton_Click">
+
+                    <Grid>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+
+                            <FontIcon Glyph="&#xE7F4;"
+                                      FontSize="14"
+                                      Foreground="#CCFFFFFF"/>
+
+                            <TextBlock Text="Notifications"
+                                       Foreground="#CCFFFFFF"
+                                       FontSize="13"/>
+                        </StackPanel>
+
+                        <Border x:Name="NotificationsBadge"
+                                Width="18"
+                                Height="18"
+                                CornerRadius="9"
+                                Background="#FF3B30"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Margin="4,-6,0,0"
+                                Visibility="Collapsed">
+
+                            <TextBlock x:Name="NotificationsBadgeText"
+                                       Text="0"
+                                       FontSize="10"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </Button>
+
                 <TextBlock Text="ACCOUNT"
                            Foreground="#66FFFFFF"
                            FontSize="10"
@@ -134,16 +172,7 @@
                         <TextBlock Text="Profile" Foreground="#CCFFFFFF" FontSize="13"/>
                     </StackPanel>
                 </Button>
-
-                <Button x:Name="BtnSettings"
-                        Style="{StaticResource NavButtonStyle}"
-                        Tag="Settings"
-                        Click="NavButton_Click">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <FontIcon Glyph="&#xE713;" FontSize="14" Foreground="#CCFFFFFF"/>
-                        <TextBlock Text="Settings" Foreground="#CCFFFFFF" FontSize="13"/>
-                    </StackPanel>
-                </Button>
+                
             </StackPanel>
 
             <!-- User Footer -->

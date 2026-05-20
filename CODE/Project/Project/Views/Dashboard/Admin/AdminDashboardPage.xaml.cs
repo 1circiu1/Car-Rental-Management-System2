@@ -2,7 +2,10 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Project.Views.Auth;
+using Project.Views.Dashboard.Notifications;
 using System;
+using CarRental.Backend.Data;
+using CarRental.Backend.Services;
 
 namespace Project.Views.Dashboard.Admin
 {
@@ -19,6 +22,7 @@ namespace Project.Views.Dashboard.Admin
         private void AdminDashboardPage_Loaded(object sender, RoutedEventArgs e)
         {
             LoadUserInfo();
+            LoadNotificationsBadge();
             SetActivePage(BtnOverview, typeof(AdminOverviewPage), "Admin Overview");
         }
 
@@ -42,6 +46,29 @@ namespace Project.Views.Dashboard.Admin
             AvatarInitials.Text = initials.ToUpper();
         }
 
+        public void LoadNotificationsBadge()
+        {
+            var user = SessionManager.CurrentUser;
+
+            if (user == null)
+                return;
+
+            using var context = new AppDbContext();
+            var notificationService = new NotificationService(context);
+
+            int unreadCount = notificationService.GetUnreadNotificationsCount(user.UserId);
+
+            if (unreadCount > 0)
+            {
+                NotificationsBadge.Visibility = Visibility.Visible;
+                NotificationsBadgeText.Text = unreadCount.ToString();
+            }
+            else
+            {
+                NotificationsBadge.Visibility = Visibility.Collapsed;
+            }
+        }
+
         private void NavButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not Button btn || btn == _activeNavButton)
@@ -63,6 +90,10 @@ namespace Project.Views.Dashboard.Admin
 
                 case "SupportTickets":
                     SetActivePage(btn, typeof(AdminSupportTicketsPage), "Support Tickets");
+                    break;
+
+                case "Notifications":
+                    SetActivePage(btn, typeof(NotificationsPage), "Notifications");
                     break;
 
                 case "Garages":

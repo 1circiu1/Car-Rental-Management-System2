@@ -64,11 +64,16 @@ namespace Project.Views.Dashboard.Customer
             LoadPaymentDetails();
             LoadRentalProgress();
 
-            if (_reservation.Status == ReservationStatus.Cancelled ||
-                _reservation.Status == ReservationStatus.Completed)
-            {
-                CancelButton.Visibility = Visibility.Collapsed;
-            }
+            DateTime cancelDeadline = _reservation.StartDate.AddHours(-2);
+
+            bool canCancel =
+                (_reservation.Status == ReservationStatus.Pending ||
+                 _reservation.Status == ReservationStatus.Confirmed) &&
+                DateTime.Now <= cancelDeadline;
+
+            CancelButton.Visibility = canCancel
+                ? Visibility.Visible
+                : Visibility.Collapsed;
 
             UpdateStatusBadge();
         }
@@ -215,9 +220,23 @@ namespace Project.Views.Dashboard.Customer
             }
         }
 
-        private void CancelReservation_Click(object sender, RoutedEventArgs e)
+        private async void CancelReservation_Click(object sender, RoutedEventArgs e)
         {
             if (_reservation == null)
+                return;
+
+            ContentDialog dialog = new ContentDialog
+            {
+                Title = "Cancel reservation?",
+                Content = "Are you sure you want to cancel this reservation? This action cannot be undone.",
+                PrimaryButtonText = "Yes, cancel",
+                CloseButtonText = "Keep reservation",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+
+            if (result != ContentDialogResult.Primary)
                 return;
 
             using var db = new AppDbContext();

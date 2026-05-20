@@ -40,6 +40,7 @@
     <None Remove="Views\Dashboard\Customer\ReservationDetailsPage.xaml" />
     <None Remove="Views\Dashboard\Customer\SupportTicketPage.xaml" />
     <None Remove="Views\Dashboard\Customer\SuppotTicketDetailsPage.xaml" />
+    <None Remove="Views\Dashboard\Notifications\NotificationsPage.xaml" />
     <None Remove="Views\Dashboard\Settings.xaml" />
     <None Remove="Views\Dashboard\SupportPage.xaml" />
   </ItemGroup>
@@ -101,6 +102,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CarRenatl.Backend\CarRental.Backend.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Dashboard\Notifications\NotificationsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Dashboard\Admin\AdminSupportTicketDetailsPage.xaml">

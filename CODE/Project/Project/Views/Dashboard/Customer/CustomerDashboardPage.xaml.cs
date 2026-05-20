@@ -1,9 +1,12 @@
+using CarRental.Backend.Data;
+using CarRental.Backend.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using System;
 using Project.Views.Auth;
+using Project.Views.Dashboard.Notifications;
+using System;
 
 
 namespace Project.Views.Dashboard.Customer
@@ -21,6 +24,9 @@ namespace Project.Views.Dashboard.Customer
         private void DashboardPage_Loaded(object sender, RoutedEventArgs e)
         {
             LoadUserInfo();
+
+            LoadNotificationsBadge();
+
             SetActivePage(BtnOverview, typeof(OverviewPage), "Overview");
         }
 
@@ -36,10 +42,30 @@ namespace Project.Views.Dashboard.Customer
             if (!string.IsNullOrEmpty(user.FirstName)) initials += user.FirstName[0];
             if (!string.IsNullOrEmpty(user.LastName)) initials += user.LastName[0];
             AvatarInitials.Text = initials.ToUpper();
+        }
 
-            if (user.Role != "Admin")
+        public void LoadNotificationsBadge()
+        {
+            var user = SessionManager.CurrentUser;
+
+            if (user == null)
+                return;
+
+            var context = new AppDbContext();
+
+            var notificationService = new NotificationService(context);
+
+            int unreadCount = notificationService
+                .GetUnreadNotificationsCount(user.UserId);
+
+            if (unreadCount > 0)
             {
-                BtnSettings.Visibility = Visibility.Collapsed;
+                NotificationsBadge.Visibility = Visibility.Visible;
+                NotificationsBadgeText.Text = unreadCount.ToString();
+            }
+            else
+            {
+                NotificationsBadge.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -62,14 +88,14 @@ namespace Project.Views.Dashboard.Customer
                 case "Profile":
                     SetActivePage(btn, typeof(ProfilePage), "My profile");
                     break;
-                case "Settings":
-                    SetActivePage(btn, typeof(SettingsPage), "Settings");
-                    break;
                 case "Favorites":
                     SetActivePage(btn, typeof(FavoritesPage), "Favorites");
                     break;
                 case "Support":
                     SetActivePage(btn, typeof(SupportPage), "Help & Support");
+                    break;
+                case "Notifications":
+                    SetActivePage(btn, typeof(NotificationsPage), "Notifications");
                     break;
             }
         }

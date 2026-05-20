@@ -91,6 +91,14 @@ namespace CarRental.Backend.Services
             ticket.Status = "Resolved";
             ticket.ResolvedAt = DateTime.Now;
 
+            var notificationService = new NotificationService(_context);
+
+            notificationService.CreateNotification(
+                ticket.UserId,
+                "Support ticket resolved",
+                $"Your support ticket \"{ticket.Subject}\" has received an admin response.",
+                "Support");
+
             _context.SaveChanges();
         }
     }
